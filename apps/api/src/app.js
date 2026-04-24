@@ -19,7 +19,6 @@ const paymentRouter = require('./routes/payment');
 
 const auth = require('./middlewares/auth');
 const ownership = require('./middlewares/ownership');
-const subscription = require('./middlewares/subscription');
 
 const app = express();
 
@@ -55,29 +54,26 @@ app.get('/health', async (req, res) => {
 // Routes
 app.use('/api/auth', authRouter);
 app.use('/api/payment', paymentRouter);
-app.use('/api/sites', auth, subscription, sitesRouter); // sitesRouter also applies auth internally; auth here enables subscription check
+app.use('/api/sites', auth, sitesRouter);
 app.use(
   '/api/sites/:siteId/categories',
   auth,
-  subscription,
   ownership,
   categoriesRouter
 );
 app.use(
   '/api/sites/:siteId/posts',
   auth,
-  subscription,
   ownership,
   postsRouter
 );
 app.use(
   '/api/sites/:siteId/social-links',
   auth,
-  subscription,
   ownership,
   socialLinksRouter
 );
-app.use('/api/upload', auth, subscription, uploadRouter);
+app.use('/api/upload', auth, uploadRouter);
 app.use('/api/contact', contactRouter);
 
 // Global error handler

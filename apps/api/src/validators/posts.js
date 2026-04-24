@@ -10,6 +10,7 @@ const create = Joi.object({
   seoDescription: Joi.string().max(255).optional().allow('', null),
   ogImageUrl: Joi.string().uri().optional().allow('', null),
   categoryIds: Joi.array().items(Joi.string().uuid()).optional(),
+  status: Joi.string().valid('draft', 'published').optional(),
 });
 
 const update = create.fork(['title', 'slug', 'content'], (s) => s.optional());

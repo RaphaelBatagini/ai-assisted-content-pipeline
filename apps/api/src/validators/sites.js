@@ -13,6 +13,8 @@ const create = Joi.object({
   address: Joi.string().optional().allow('', null),
   gaTrackingId: Joi.string().optional().allow('', null),
   gtmContainerId: Joi.string().optional().allow('', null),
+  fbPixelId: Joi.string().optional().allow('', null),
+  customHeadScripts: Joi.string().optional().allow('', null),
 });
 
 const update = create.fork(

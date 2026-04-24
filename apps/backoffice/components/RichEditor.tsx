@@ -6,7 +6,7 @@ import Image from "@tiptap/extension-image";
 import Link from "@tiptap/extension-link";
 import Heading from "@tiptap/extension-heading";
 import Placeholder from "@tiptap/extension-placeholder";
-import { useCallback, useRef } from "react";
+import { useCallback, useRef, useEffect } from "react";
 import { toast } from "sonner";
 import api from "@/lib/api";
 import { cn } from "@/lib/utils";
@@ -45,6 +45,7 @@ export function RichEditor({ value, onChange, placeholder = "Start writing…" }
       Placeholder.configure({ placeholder }),
     ],
     content: value,
+    immediatelyRender: false,
     onUpdate: ({ editor }) => onChange(editor.getHTML()),
     editorProps: {
       attributes: {
@@ -53,6 +54,15 @@ export function RichEditor({ value, onChange, placeholder = "Start writing…" }
       },
     },
   });
+
+  // Sync editor content when value changes externally (e.g. after async data load)
+  useEffect(() => {
+    if (!editor) return;
+    const current = editor.getHTML();
+    if (value !== current) {
+      editor.commands.setContent(value);
+    }
+  }, [value, editor]);
 
   const addLink = useCallback(() => {
     if (!editor) return;

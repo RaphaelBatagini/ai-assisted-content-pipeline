@@ -141,14 +141,10 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
     if (isLoading) return;
     if (!user) {
       router.replace("/login");
-      return;
-    }
-    if (user.subscriptionStatus === "pending") {
-      router.replace("/payment-pending");
     }
   }, [user, isLoading, router]);
 
-  if (isLoading || !user || user.subscriptionStatus === "pending") {
+  if (isLoading || !user) {
     return (
       <div className="min-h-screen flex items-center justify-center">
         <div className="text-muted-foreground animate-pulse">Loading…</div>

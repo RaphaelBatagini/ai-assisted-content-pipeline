@@ -89,6 +89,18 @@ router.put('/:postId/publish', async (req, res, next) => {
   }
 });
 
+// PUT /api/sites/:siteId/posts/:postId/archive
+router.put('/:postId/archive', async (req, res, next) => {
+  try {
+    const post = await Post.findOne({ where: { id: req.params.postId, siteId: req.site.id } });
+    if (!post) return res.status(404).json({ error: 'Post not found' });
+    await post.update({ status: 'archived' });
+    res.json(post);
+  } catch (err) {
+    next(err);
+  }
+});
+
 // DELETE /api/sites/:siteId/posts/:postId
 router.delete('/:postId', async (req, res, next) => {
   try {

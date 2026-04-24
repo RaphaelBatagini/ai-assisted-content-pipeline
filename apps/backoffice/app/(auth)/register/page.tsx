@@ -32,9 +32,7 @@ export default function RegisterPage() {
     try {
       const resp = await api.post("/api/auth/register", data);
       login(resp.data.accessToken);
-      // Redirect to Stripe Checkout
-      const checkoutResp = await api.post("/api/payment/checkout");
-      window.location.href = checkoutResp.data.url;
+      window.location.href = "/dashboard";
     } catch (err: unknown) {
       const msg =
         (err as { response?: { data?: { error?: string } } })?.response?.data?.error ??
