@@ -14,13 +14,18 @@ const postsRouter = require('./routes/posts');
 const socialLinksRouter = require('./routes/socialLinks');
 const uploadRouter = require('./routes/upload');
 const contactRouter = require('./routes/contact');
+const paymentRouter = require('./routes/payment');
 
 const auth = require('./middlewares/auth');
 const ownership = require('./middlewares/ownership');
+const subscription = require('./middlewares/subscription');
 
 const app = express();
 
 const PORT = process.env.PORT || 3000;
+
+// Webhook must be registered BEFORE express.json() to receive raw body
+app.use('/api/payment/webhook', express.raw({ type: 'application/json' }), paymentRouter);
 
 app.use(express.json());
 app.use(cookieParser());
@@ -37,26 +42,30 @@ app.get('/health', async (req, res) => {
 
 // Routes
 app.use('/api/auth', authRouter);
-app.use('/api/sites', sitesRouter);
+app.use('/api/payment', paymentRouter);
+app.use('/api/sites', auth, subscription, sitesRouter); // sitesRouter also applies auth internally; auth here enables subscription check
 app.use(
   '/api/sites/:siteId/categories',
   auth,
+  subscription,
   ownership,
   categoriesRouter
 );
 app.use(
   '/api/sites/:siteId/posts',
   auth,
+  subscription,
   ownership,
   postsRouter
 );
 app.use(
   '/api/sites/:siteId/social-links',
   auth,
+  subscription,
   ownership,
   socialLinksRouter
 );
-app.use('/api/upload', uploadRouter);
+app.use('/api/upload', auth, subscription, uploadRouter);
 app.use('/api/contact', contactRouter);
 
 // Global error handler

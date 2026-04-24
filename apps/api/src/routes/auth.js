@@ -64,22 +64,25 @@ router.post('/login', validate(loginSchema), async (req, res, next) => {
 });
 
 // POST /api/auth/refresh
-router.post('/refresh', (req, res, next) => {
+router.post('/refresh', async (req, res, next) => {
   const token = req.cookies && req.cookies.refreshToken;
   if (!token) {
     return res.status(401).json({ error: 'Missing refresh token' });
   }
   try {
     const payload = jwt.verify(token, process.env.JWT_REFRESH_SECRET);
-    // Issue new access token (we only store userId in refresh token)
-    const accessToken = jwt.sign(
-      { userId: payload.userId },
-      process.env.JWT_SECRET,
-      { expiresIn: ACCESS_TOKEN_EXPIRY }
-    );
+    // Fetch user to include current subscriptionStatus in new token
+    const user = await User.findByPk(payload.userId);
+    if (!user) {
+      return res.status(401).json({ error: 'User not found' });
+    }
+    const accessToken = generateAccessToken(user);
     res.json({ accessToken });
   } catch (err) {
-    return res.status(401).json({ error: 'Invalid or expired refresh token' });
+    if (err.name === 'JsonWebTokenError' || err.name === 'TokenExpiredError') {
+      return res.status(401).json({ error: 'Invalid or expired refresh token' });
+    }
+    next(err);
   }
 });
 
