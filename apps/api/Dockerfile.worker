@@ -1,0 +1,27 @@
+FROM node:20-alpine AS base
+
+# Install system deps needed for node-gyp (bcrypt) and Next.js builds
+RUN apk add --no-cache python3 make g++ libc6-compat
+
+WORKDIR /app
+
+# ── API dependencies ──────────────────────────────────────────────────────────
+COPY apps/api/package*.json ./api/
+RUN cd api && npm ci --omit=dev
+
+COPY apps/api ./api
+
+# ── Site-template dependencies ────────────────────────────────────────────────
+COPY apps/site-template/package*.json ./site-template/
+RUN cd site-template && npm ci
+
+COPY apps/site-template ./site-template
+
+# ── Worker entrypoint ─────────────────────────────────────────────────────────
+WORKDIR /app/api
+
+ENV SITE_TEMPLATE_DIR=/app/site-template
+ENV BUILDS_BASE_DIR=/tmp/builds
+ENV NODE_ENV=production
+
+CMD ["node", "src/workers/buildWorker.js"]

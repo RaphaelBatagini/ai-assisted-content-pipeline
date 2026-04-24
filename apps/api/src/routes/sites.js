@@ -4,6 +4,7 @@ const auth = require('../middlewares/auth');
 const ownership = require('../middlewares/ownership');
 const validate = require('../middlewares/validate');
 const { create: createSchema, update: updateSchema } = require('../validators/sites');
+const { enqueueBuild } = require('../services/buildQueue');
 
 // All routes require auth
 router.use(auth);
@@ -37,6 +38,9 @@ router.get('/:siteId', ownership, (req, res) => {
 router.put('/:siteId', ownership, validate(updateSchema), async (req, res, next) => {
   try {
     await req.site.update(req.body);
+    enqueueBuild(req.site.id, 'settings_change').catch((err) =>
+      console.error('[sites] Failed to enqueue build:', err.message),
+    );
     res.json(req.site);
   } catch (err) {
     next(err);

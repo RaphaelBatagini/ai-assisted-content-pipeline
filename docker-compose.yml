@@ -32,5 +32,35 @@ services:
     environment:
       - NEXT_PUBLIC_API_URL=${API_URL:-http://localhost:3001}
 
+  build-worker:
+    build:
+      context: .
+      dockerfile: apps/api/Dockerfile.worker
+    container_name: blogs_tool_build_worker
+    restart: unless-stopped
+    depends_on:
+      - postgres
+      - redis
+    environment:
+      - NODE_ENV=production
+      - DATABASE_URL=${DATABASE_URL:-postgres://postgres:postgres@postgres:5432/blogs_tool}
+      - DB_HOST=postgres
+      - DB_PORT=5432
+      - DB_NAME=${DB_NAME:-blogs_tool}
+      - DB_USER=${DB_USER:-postgres}
+      - DB_PASSWORD=${DB_PASSWORD:-postgres}
+      - REDIS_URL=redis://redis:6379
+      - AWS_REGION=${AWS_REGION:-us-east-1}
+      - AWS_ACCESS_KEY_ID=${AWS_ACCESS_KEY_ID}
+      - AWS_SECRET_ACCESS_KEY=${AWS_SECRET_ACCESS_KEY}
+      - STATIC_SITES_BUCKET=${STATIC_SITES_BUCKET}
+      - CF_DISTRIBUTION_ID=${CF_DISTRIBUTION_ID}
+      - SITE_BASE_URL_TEMPLATE=${SITE_BASE_URL_TEMPLATE:-http://{slug}.localhost}
+      - API_URL=${API_URL:-http://localhost:3001}
+      - BUILD_CONCURRENCY=${BUILD_CONCURRENCY:-1}
+    volumes:
+      - build_tmp:/tmp/builds
+
 volumes:
   postgres_data:
+  build_tmp:

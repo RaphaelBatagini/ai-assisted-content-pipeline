@@ -1,0 +1,14 @@
+[
+  {
+    "id": "1",
+    "name": "Tecnologia",
+    "slug": "tecnologia",
+    "description": "Artigos sobre tecnologia e programação."
+  },
+  {
+    "id": "2",
+    "name": "Dicas",
+    "slug": "dicas",
+    "description": "Dicas práticas do dia a dia."
+  }
+]

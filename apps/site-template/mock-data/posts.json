@@ -1,0 +1,67 @@
+[
+  {
+    "id": "1",
+    "title": "Bem-vindo ao Mock Blog",
+    "slug": "bem-vindo-ao-mock-blog",
+    "excerpt": "Este é um post de exemplo para testar o template.",
+    "content": "<p>Este é o conteúdo completo do primeiro post. Aqui você pode adicionar <strong>HTML</strong> rico.</p><p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>",
+    "coverImageUrl": null,
+    "status": "published",
+    "publishedAt": "2026-04-20T10:00:00.000Z",
+    "seoTitle": "Bem-vindo ao Mock Blog — Primeiro Post",
+    "seoDescription": "Post de exemplo para testar o site-template com dados mockados.",
+    "ogImageUrl": null,
+    "readingTimeMinutes": 3,
+    "Categories": [
+      {
+        "id": "1",
+        "name": "Tecnologia",
+        "slug": "tecnologia",
+        "description": "Artigos sobre tecnologia e programação."
+      }
+    ]
+  },
+  {
+    "id": "2",
+    "title": "Dicas para Programar Melhor",
+    "slug": "dicas-para-programar-melhor",
+    "excerpt": "Confira nossas dicas para melhorar sua produtividade como desenvolvedor.",
+    "content": "<p>Programar melhor é uma arte que se aprende com prática e dedicação.</p><ul><li>Escreva código limpo</li><li>Faça code review</li><li>Teste seu código</li></ul>",
+    "coverImageUrl": null,
+    "status": "published",
+    "publishedAt": "2026-04-22T14:00:00.000Z",
+    "seoTitle": null,
+    "seoDescription": null,
+    "ogImageUrl": null,
+    "readingTimeMinutes": 5,
+    "Categories": [
+      {
+        "id": "1",
+        "name": "Tecnologia",
+        "slug": "tecnologia",
+        "description": "Artigos sobre tecnologia e programação."
+      },
+      {
+        "id": "2",
+        "name": "Dicas",
+        "slug": "dicas",
+        "description": "Dicas práticas do dia a dia."
+      }
+    ]
+  },
+  {
+    "id": "3",
+    "title": "Post em Rascunho",
+    "slug": "post-em-rascunho",
+    "excerpt": "Este post não deve aparecer no site pois está em rascunho.",
+    "content": "<p>Conteúdo em rascunho.</p>",
+    "coverImageUrl": null,
+    "status": "draft",
+    "publishedAt": null,
+    "seoTitle": null,
+    "seoDescription": null,
+    "ogImageUrl": null,
+    "readingTimeMinutes": null,
+    "Categories": []
+  }
+]

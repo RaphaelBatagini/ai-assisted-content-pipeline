@@ -2,6 +2,7 @@ const router = require('express').Router({ mergeParams: true });
 const { Post, Category, PostCategory } = require('../models');
 const validate = require('../middlewares/validate');
 const { create: createSchema, update: updateSchema } = require('../validators/posts');
+const { enqueueBuild } = require('../services/buildQueue');
 
 function calcReadingTime(content) {
   const wordCount = content.trim().split(/\s+/).length;
@@ -82,7 +83,9 @@ router.put('/:postId/publish', async (req, res, next) => {
     const post = await Post.findOne({ where: { id: req.params.postId, siteId: req.site.id } });
     if (!post) return res.status(404).json({ error: 'Post not found' });
     await post.update({ status: 'published', publishedAt: new Date() });
-    // TODO: enqueue site build job (Bull/Redis — Phase 5)
+    enqueueBuild(req.site.id, 'content_change').catch((err) =>
+      console.error('[posts] Failed to enqueue build:', err.message),
+    );
     res.json(post);
   } catch (err) {
     next(err);

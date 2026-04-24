@@ -1,0 +1,16 @@
+[
+  {
+    "id": "d1d3880a-7dcb-46be-883e-88675c592861",
+    "siteId": "8b5418a2-e193-4342-9c8e-1625aadc478a",
+    "name": "Test",
+    "slug": "test",
+    "description": null
+  },
+  {
+    "id": "a39cd7c5-7fd9-4b99-a533-a15db7ad6162",
+    "siteId": "8b5418a2-e193-4342-9c8e-1625aadc478a",
+    "name": "Interesting posts",
+    "slug": "interesting-posts",
+    "description": null
+  }
+]

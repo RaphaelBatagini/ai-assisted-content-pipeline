@@ -1,0 +1,10 @@
+{
+  "name": "blogs-tool-lambda-edge",
+  "version": "0.1.0",
+  "description": "Lambda@Edge viewer-request function for wildcard subdomain routing",
+  "main": "viewer-request.js",
+  "scripts": {
+    "package": "zip -r lambda-edge.zip viewer-request.js",
+    "deploy": "aws lambda update-function-code --function-name blogs-tool-viewer-request --zip-file fileb://lambda-edge.zip --region us-east-1"
+  }
+}

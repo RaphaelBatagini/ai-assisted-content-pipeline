@@ -1,0 +1,16 @@
+{
+  "id": "1",
+  "name": "Mock Blog",
+  "slug": "mock-blog",
+  "colorPalette": "ocean_breeze",
+  "logoUrl": null,
+  "faviconUrl": null,
+  "contactEmail": "contato@mockblog.com",
+  "whatsapp": "11999999999",
+  "address": "Rua Exemplo, 123 — São Paulo, SP",
+  "gaTrackingId": null,
+  "gtmContainerId": null,
+  "fbPixelId": null,
+  "customHeadScripts": null,
+  "updatedAt": "2026-04-24T00:00:00.000Z"
+}
