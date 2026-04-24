@@ -1,4 +1,5 @@
-const router = require('express').Router();
+const express = require('express');
+const router = express.Router();
 const Stripe = require('stripe');
 const auth = require('../middlewares/auth');
 const { User } = require('../models');
@@ -26,7 +27,7 @@ router.post('/checkout', auth, async (req, res, next) => {
 });
 
 // POST /api/payment/webhook — public, requires raw body
-router.post('/webhook', async (req, res) => {
+router.post('/webhook', express.raw({ type: 'application/json' }), async (req, res) => {
   const stripe = new Stripe(process.env.STRIPE_SECRET_KEY);
   const sig = req.headers['stripe-signature'];
 

@@ -1,6 +1,7 @@
 require('dotenv').config();
 
 const express = require('express');
+const cors = require('cors');
 const cookieParser = require('cookie-parser');
 const sequelize = require('./config/database');
 
@@ -22,10 +23,21 @@ const subscription = require('./middlewares/subscription');
 
 const app = express();
 
-const PORT = process.env.PORT || 3000;
+const PORT = process.env.PORT || 3001;
 
-// Webhook must be registered BEFORE express.json() to receive raw body
-app.use('/api/payment/webhook', express.raw({ type: 'application/json' }), paymentRouter);
+const allowedOrigins = [
+  process.env.FRONTEND_URL || 'http://localhost:3000',
+  process.env.LANDING_URL  || 'http://localhost:3002',
+];
+
+app.use(cors({
+  origin: (origin, callback) => {
+    // Allow requests with no origin (curl, Postman, server-to-server)
+    if (!origin || allowedOrigins.includes(origin)) return callback(null, true);
+    callback(new Error(`CORS: origin '${origin}' not allowed`));
+  },
+  credentials: true,
+}));
 
 app.use(express.json());
 app.use(cookieParser());

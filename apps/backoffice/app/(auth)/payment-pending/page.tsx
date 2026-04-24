@@ -1,7 +1,8 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useQuery } from "@tanstack/react-query";
+import { useRouter } from "next/navigation";
 import { toast } from "sonner";
 import { useAuth } from "@/context/AuthContext";
 import api from "@/lib/api";
@@ -10,7 +11,8 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { CreditCard, RefreshCw } from "lucide-react";
 
 export default function PaymentPendingPage() {
-  const { user, logout } = useAuth();
+  const { user, login, logout } = useAuth();
+  const router = useRouter();
   const [redirecting, setRedirecting] = useState(false);
 
   // Poll subscription status every 5s
@@ -18,11 +20,20 @@ export default function PaymentPendingPage() {
     queryKey: ["subscriptionStatus"],
     queryFn: async () => {
       const resp = await api.post("/api/auth/refresh");
-      return resp.data.accessToken;
+      const newToken: string = resp.data.accessToken;
+      login(newToken);
+      return newToken;
     },
     refetchInterval: 5000,
     enabled: user?.subscriptionStatus === "pending",
   });
+
+  // Redirect to dashboard once subscription is active
+  useEffect(() => {
+    if (user?.subscriptionStatus === "active") {
+      router.replace("/dashboard");
+    }
+  }, [user?.subscriptionStatus, router]);
 
   async function handlePayment() {
     setRedirecting(true);

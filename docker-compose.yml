@@ -21,5 +21,16 @@ services:
     ports:
       - '6379:6379'
 
+  landing:
+    build:
+      context: ./apps/landing
+      dockerfile: Dockerfile
+    container_name: blogs_tool_landing
+    restart: unless-stopped
+    ports:
+      - '3002:3000'
+    environment:
+      - NEXT_PUBLIC_API_URL=${API_URL:-http://localhost:3001}
+
 volumes:
   postgres_data:
