@@ -1,58 +1,101 @@
 [
   {
     "id": "1",
-    "title": "Bem-vindo ao Mock Blog",
-    "slug": "bem-vindo-ao-mock-blog",
-    "excerpt": "Este é um post de exemplo para testar o template.",
-    "content": "<p>Este é o conteúdo completo do primeiro post. Aqui você pode adicionar <strong>HTML</strong> rico.</p><p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>",
+    "title": "Como a tecnologia está transformando pequenas empresas",
+    "slug": "tecnologia-transformando-pequenas-empresas",
+    "author": "Maria Santos",
+    "excerpt": "Descubra como ferramentas digitais acessíveis estão nivelando o campo de jogo para pequenos empreendedores competirem com grandes corporações.",
+    "content": "<h2>O cenário atual</h2><p>Nunca foi tão fácil para uma pequena empresa ter acesso a ferramentas que antes eram exclusivas de grandes corporações. Plataformas de gestão, automação de marketing e análise de dados agora estão ao alcance de qualquer empreendedor.</p><h2>Ferramentas que fazem a diferença</h2><p>Entre as principais tecnologias que estão impactando positivamente pequenos negócios, destacam-se os sistemas de CRM, as plataformas de e-commerce e as soluções de pagamento digital.</p><h2>Como começar</h2><p>O primeiro passo é mapear os processos do seu negócio e identificar onde a tecnologia pode automatizar tarefas repetitivas. Isso libera tempo para você focar no que realmente importa: crescer.</p>",
     "coverImageUrl": null,
     "status": "published",
     "publishedAt": "2026-04-20T10:00:00.000Z",
-    "seoTitle": "Bem-vindo ao Mock Blog — Primeiro Post",
-    "seoDescription": "Post de exemplo para testar o site-template com dados mockados.",
+    "seoTitle": "Como a Tecnologia Está Transformando Pequenas Empresas",
+    "seoDescription": "Descubra como ferramentas digitais acessíveis estão nivelando o campo de jogo para pequenos empreendedores.",
     "ogImageUrl": null,
-    "readingTimeMinutes": 3,
+    "readingTimeMinutes": 4,
     "Categories": [
-      {
-        "id": "1",
-        "name": "Tecnologia",
-        "slug": "tecnologia",
-        "description": "Artigos sobre tecnologia e programação."
-      }
+      { "id": "1", "name": "Tecnologia", "slug": "tecnologia", "description": "Artigos sobre tecnologia e programação." }
     ]
   },
   {
     "id": "2",
-    "title": "Dicas para Programar Melhor",
+    "title": "5 Dicas para Programar Melhor e Ter Mais Produtividade",
     "slug": "dicas-para-programar-melhor",
-    "excerpt": "Confira nossas dicas para melhorar sua produtividade como desenvolvedor.",
-    "content": "<p>Programar melhor é uma arte que se aprende com prática e dedicação.</p><ul><li>Escreva código limpo</li><li>Faça code review</li><li>Teste seu código</li></ul>",
+    "author": "Carlos Lima",
+    "excerpt": "Confira nossas dicas essenciais para melhorar sua produtividade como desenvolvedor e escrever código de qualidade.",
+    "content": "<h2>1. Escreva código limpo</h2><p>Código legível é código que você consegue manter daqui a seis meses. Use nomes descritivos, funções pequenas e comentários quando necessário.</p><h2>2. Faça code review</h2><p>Revisar o código de colegas melhora tanto o produto final quanto o seu próprio aprendizado. Crie uma cultura de feedback construtivo.</p><h2>3. Teste seu código</h2><p>Testes automatizados evitam regressões e dão confiança para refatorar. Comece com testes unitários e expanda para integração.</p><h2>4. Use controle de versão</h2><p>Git não é opcional. Aprenda o fluxo de trabalho com branches, commits atômicos e mensagens descritivas.</p><h2>5. Invista em aprendizado contínuo</h2><p>A tecnologia evolui rápido. Reserve tempo semanal para estudar novas ferramentas, ler documentação e acompanhar a comunidade.</p>",
     "coverImageUrl": null,
     "status": "published",
     "publishedAt": "2026-04-22T14:00:00.000Z",
-    "seoTitle": null,
-    "seoDescription": null,
+    "seoTitle": "5 Dicas para Programar Melhor — Guia Prático",
+    "seoDescription": "Dicas essenciais para melhorar sua produtividade como desenvolvedor e escrever código de qualidade.",
     "ogImageUrl": null,
     "readingTimeMinutes": 5,
     "Categories": [
-      {
-        "id": "1",
-        "name": "Tecnologia",
-        "slug": "tecnologia",
-        "description": "Artigos sobre tecnologia e programação."
-      },
-      {
-        "id": "2",
-        "name": "Dicas",
-        "slug": "dicas",
-        "description": "Dicas práticas do dia a dia."
-      }
+      { "id": "1", "name": "Tecnologia", "slug": "tecnologia", "description": "Artigos sobre tecnologia e programação." },
+      { "id": "2", "name": "Dicas", "slug": "dicas", "description": "Dicas práticas do dia a dia." }
+    ]
+  },
+  {
+    "id": "4",
+    "title": "Gestão de Equipes Remotas: O Guia Completo para 2026",
+    "slug": "gestao-equipes-remotas-guia-2026",
+    "author": "Ana Oliveira",
+    "excerpt": "O trabalho remoto veio para ficar. Saiba como estruturar processos, ferramentas e cultura para que sua equipe distribuída seja altamente produtiva.",
+    "content": "<h2>Por que gestão remota exige uma abordagem diferente</h2><p>Equipes presenciais se beneficiam de comunicação informal e contexto compartilhado. No trabalho remoto, tudo precisa ser explícito, documentado e assíncrono por padrão.</p><h2>Pilares de uma equipe remota eficaz</h2><p>Os três pilares são: comunicação clara, autonomia com responsabilidade e ferramentas adequadas. Nenhum substitui os outros dois.</p><h2>Ferramentas recomendadas</h2><p>Para comunicação assíncrona, Notion e Linear. Para videoconferências, qualquer solução funciona — o que importa é ter rituais bem definidos. Para gestão de tarefas, use o que a equipe já conhece.</p><h2>Construindo cultura à distância</h2><p>Cultura não é o que está no handbook. É o que acontece quando ninguém está olhando. Comemore vitórias, dê feedback rápido e crie espaços para conversas informais.</p>",
+    "coverImageUrl": null,
+    "status": "published",
+    "publishedAt": "2026-04-23T09:00:00.000Z",
+    "seoTitle": "Gestão de Equipes Remotas: Guia Completo 2026",
+    "seoDescription": "Como estruturar processos, ferramentas e cultura para que sua equipe remota seja altamente produtiva.",
+    "ogImageUrl": null,
+    "readingTimeMinutes": 7,
+    "Categories": [
+      { "id": "3", "name": "Gestão", "slug": "gestao", "description": "Como gerir melhor o seu negócio." }
+    ]
+  },
+  {
+    "id": "5",
+    "title": "Fluxo de Caixa: Por que Ele É Mais Importante que o Lucro",
+    "slug": "fluxo-de-caixa-mais-importante-que-lucro",
+    "author": "Roberto Campos",
+    "excerpt": "Empresas lucrativas quebram todos os anos por problemas de fluxo de caixa. Entenda a diferença entre lucro e caixa e aprenda a monitorar sua saúde financeira.",
+    "content": "<h2>O paradoxo do lucro sem caixa</h2><p>É possível ter um negócio lucrativo no papel e não ter dinheiro para pagar fornecedores. Isso acontece quando as vendas são a prazo e os custos são à vista.</p><h2>Como calcular seu fluxo de caixa</h2><p>Some todas as entradas previstas para o período e subtraia todas as saídas. Um fluxo de caixa negativo não é necessariamente ruim — o problema é quando é uma surpresa.</p><h2>Dicas práticas</h2><p>Mantenha uma reserva equivalente a três meses de despesas fixas. Incentive pagamentos antecipados com descontos. Negocie prazos maiores com fornecedores.</p>",
+    "coverImageUrl": null,
+    "status": "published",
+    "publishedAt": "2026-04-24T11:00:00.000Z",
+    "seoTitle": "Fluxo de Caixa: Por que É Mais Importante que o Lucro",
+    "seoDescription": "Entenda a diferença entre lucro e caixa e aprenda a monitorar a saúde financeira da sua empresa.",
+    "ogImageUrl": null,
+    "readingTimeMinutes": 6,
+    "Categories": [
+      { "id": "4", "name": "Finanças", "slug": "financas", "description": "Educação financeira para empreendedores." }
+    ]
+  },
+  {
+    "id": "6",
+    "title": "Como Montar um Processo de Onboarding que Retém Talentos",
+    "slug": "processo-onboarding-retencao-talentos",
+    "author": "Ana Oliveira",
+    "excerpt": "Os primeiros 90 dias de um colaborador definem se ele vai ficar ou sair. Veja como criar um processo de integração estruturado e humano.",
+    "content": "<h2>Por que o onboarding importa</h2><p>Empresas com processos de onboarding bem estruturados têm retenção 82% maior no primeiro ano. Um colaborador que sai nos primeiros seis meses custa em média 50% do seu salário anual.</p><h2>Os três estágios do onboarding</h2><p>Pré-onboarding (antes do primeiro dia), integração (primeiras duas semanas) e desenvolvimento inicial (até 90 dias). Cada estágio tem objetivos distintos.</p><h2>Elementos de um onboarding eficaz</h2><p>Buddy program, checklist de primeiras tarefas, reuniões de feedback frequentes e clareza sobre expectativas. Simples assim — o que falta é execução consistente.</p>",
+    "coverImageUrl": null,
+    "status": "published",
+    "publishedAt": "2026-04-25T08:00:00.000Z",
+    "seoTitle": "Como Montar um Processo de Onboarding que Retém Talentos",
+    "seoDescription": "Os primeiros 90 dias de um colaborador definem se ele vai ficar. Aprenda a criar um onboarding que retém talentos.",
+    "ogImageUrl": null,
+    "readingTimeMinutes": 5,
+    "Categories": [
+      { "id": "3", "name": "Gestão", "slug": "gestao", "description": "Como gerir melhor o seu negócio." },
+      { "id": "2", "name": "Dicas", "slug": "dicas", "description": "Dicas práticas do dia a dia." }
     ]
   },
   {
     "id": "3",
     "title": "Post em Rascunho",
     "slug": "post-em-rascunho",
+    "author": null,
     "excerpt": "Este post não deve aparecer no site pois está em rascunho.",
     "content": "<p>Conteúdo em rascunho.</p>",
     "coverImageUrl": null,

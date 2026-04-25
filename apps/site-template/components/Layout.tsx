@@ -33,11 +33,7 @@ export default function Layout({ children, site, categories, socialLinks }: Layo
           </Link>
           <nav className="site-nav">
             <Link href="/">Home</Link>
-            {categories.map((cat) => (
-              <Link key={cat.id} href={`/${cat.slug}/`}>
-                {cat.name}
-              </Link>
-            ))}
+            <Link href="/blog/">Blog</Link>
             <Link href="/contato/">Contato</Link>
           </nav>
         </div>

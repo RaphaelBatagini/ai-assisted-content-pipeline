@@ -10,5 +10,17 @@
     "name": "Dicas",
     "slug": "dicas",
     "description": "Dicas práticas do dia a dia."
+  },
+  {
+    "id": "3",
+    "name": "Gestão",
+    "slug": "gestao",
+    "description": "Como gerir melhor o seu negócio."
+  },
+  {
+    "id": "4",
+    "name": "Finanças",
+    "slug": "financas",
+    "description": "Educação financeira para empreendedores."
   }
 ]

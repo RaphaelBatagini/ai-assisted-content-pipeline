@@ -8,7 +8,7 @@
     "postbuild": "node scripts/generate-sitemap.js",
     "start": "next start",
     "export": "next build",
-    "dev:mock": "SITE_DATA_PATH=$PWD/mock-data-2 next dev",
+    "dev:mock": "SITE_DATA_PATH=$PWD/mock-data next dev",
     "build:mock": "SITE_DATA_PATH=$PWD/mock-data SITE_BASE_URL=http://localhost:3003 next build && SITE_DATA_PATH=$PWD/mock-data SITE_BASE_URL=http://localhost:3003 node scripts/generate-sitemap.js",
     "serve:mock": "npm run build:mock && npx serve out -p 3003"
   },

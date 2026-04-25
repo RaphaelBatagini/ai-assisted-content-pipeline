@@ -27,6 +27,9 @@ Thumbs.db
 *.swp
 *.swo
 
+# Local image uploads (development only)
+apps/api/uploads/
+
 # Docker
 docker-compose.override.yml
 

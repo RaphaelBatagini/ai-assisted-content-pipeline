@@ -3,6 +3,7 @@ require('dotenv').config();
 const express = require('express');
 const cors = require('cors');
 const cookieParser = require('cookie-parser');
+const path = require('path');
 const sequelize = require('./config/database');
 
 // Ensure model associations are loaded
@@ -40,6 +41,11 @@ app.use(cors({
 
 app.use(express.json());
 app.use(cookieParser());
+
+// Serve local uploads (used when AWS_S3_BUCKET is not set)
+if (!process.env.AWS_S3_BUCKET) {
+  app.use('/uploads', express.static(path.resolve(__dirname, '../uploads')));
+}
 
 // Health check
 app.get('/health', async (req, res) => {
