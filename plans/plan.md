@@ -312,54 +312,79 @@ Pipeline GitHub Actions:
 ## Tarefas por Fase
 
 ### Fase 0 — Infraestrutura Base
-- [ ] Criar estrutura `apps/`
-- [ ] Docker Compose local (PostgreSQL, Redis)
-- [ ] Setup Sequelize com models iniciais e primeira migration dentro de `apps/api/`
-- [ ] Configuração de variáveis de ambiente (`.env.example`)
+- [x] Criar estrutura `apps/`
+- [x] Docker Compose local (PostgreSQL, Redis)
+- [x] Setup Sequelize com models iniciais e primeira migration dentro de `apps/api/`
+- [x] Configuração de variáveis de ambiente (`.env.example`)
 
 ### Fase 1 — Backend Core
-- [ ] Autenticação JWT (register, login, refresh, logout)
-- [ ] Middleware de validação de ownership (`siteId` pertence ao usuário)
-- [ ] CRUD de Sites
-- [ ] CRUD de Categorias
-- [ ] CRUD de Posts (incluindo ação de publicação)
-- [ ] CRUD de Redes Sociais
-- [ ] Upload de mídia para S3
-- [ ] Rota pública de contato + envio de e-mail
-- [ ] Testes de integração das rotas principais
+- [x] Autenticação JWT (register, login, refresh, logout)
+- [x] Middleware de validação de ownership (`siteId` pertence ao usuário)
+- [x] CRUD de Sites
+- [x] CRUD de Categorias
+- [x] CRUD de Posts (incluindo ação de publicação)
+- [x] CRUD de Redes Sociais
+- [x] Upload de mídia para S3
+- [x] Rota pública de contato + envio de e-mail
+- [x] Testes de integração das rotas principais
 
 ### Fase 2 — Pagamento
-- [ ] Integração Stripe Checkout (criação de sessão)
-- [ ] Webhook para ativar conta (`subscription_status = active`)
-- [ ] Middleware de verificação de subscription nas rotas protegidas
+- [x] Integração Stripe Checkout (criação de sessão)
+- [x] Webhook para ativar conta (`subscription_status = active`)
+- [x] Middleware de verificação de subscription nas rotas protegidas
 
 ### Fase 3 — Backoffice
-- [ ] Setup Next.js 14 + shadcn/ui + Tailwind CSS
-- [ ] Telas de autenticação (login, register)
-- [ ] Tela de pagamento pendente com botão de retry
-- [ ] Dashboard de sites
-- [ ] Formulário de criação/edição de site (paleta, SEO, integrações, redes sociais, endereço)
-- [ ] Gestão de categorias
-- [ ] Listagem de posts com filtro por status
-- [ ] Editor de post rico (TipTap) com upload de imagem inline
+- [x] Setup Next.js 14 + shadcn/ui + Tailwind CSS
+- [x] Telas de autenticação (login, register)
+- [x] Tela de pagamento pendente com botão de retry
+- [x] Dashboard de sites
+- [x] Formulário de criação/edição de site (paleta, SEO, integrações, redes sociais, endereço)
+- [x] Gestão de categorias
+- [x] Listagem de posts com filtro por status
+- [x] Editor de post rico (TipTap) com upload de imagem inline
 
 ### Fase 4 — Landing Page
-- [ ] Design e conteúdo da LP (SSG)
-- [ ] Integração com fluxo de cadastro → Stripe Checkout
+- [x] Design e conteúdo da LP (SSG)
+- [x] Integração com fluxo de cadastro → Stripe Checkout
 
 ### Fase 5 — Site Generator Estático
-- [ ] Projeto `site-template` base (Next.js export com páginas essenciais)
-- [ ] Worker Bull para consumo da fila de builds
-- [ ] Script de upload para S3 + invalidação de cache CloudFront
-- [ ] Wildcard subdomain na CDN com Lambda@Edge
-- [ ] Testes end-to-end do fluxo publicação → site ao vivo
+- [x] Projeto `site-template` base (Next.js export com páginas essenciais)
+- [x] Worker Bull para consumo da fila de builds
+- [x] Script de upload para S3 + invalidação de cache CloudFront
+- [x] Wildcard subdomain na CDN com Lambda@Edge
+- [x] Testes end-to-end do fluxo publicação → site ao vivo
 
-### Fase 6 — Hardening e Deploy
+### Fase 6 — Deploy e Documentação
 - [ ] Dockerfiles de produção para cada app
 - [ ] Pipeline GitHub Actions (lint, test, build, deploy)
-- [ ] Monitoramento de erros (Sentry)
-- [ ] Monitoramento de uptime (UptimeRobot ou similar)
 - [ ] Documentação de onboarding para novos desenvolvedores
+
+### Fase 7 — Tracking e Analytics
+- [ ] Tracking de cliques em botões de conversão (CTA "entrar em contato") nos sites estáticos via eventos GA/GTM
+- [ ] Endpoint na API para receber e armazenar eventos de clique vindos do site-template (`POST /api/analytics/events`)
+- [ ] Integração com a API do Google Analytics (Data API) para coletar métricas de performance por post (pageviews, tempo médio, taxa de rejeição)
+- [ ] Armazenamento das métricas coletadas por post na tabela `post_analytics` (snapshot periódico via worker)
+- [ ] Tela no backoffice com painel de performance dos posts (visualizações, engajamento, conversões)
+
+### Fase 8 — Agenda de Publicações
+- [ ] Adicionar campo `scheduled_at` (timestamptz nullable) na tabela `posts`
+- [ ] Adicionar status `scheduled` no enum de `posts.status`
+- [ ] Endpoint `PUT /:postId/schedule` — define `scheduled_at` e muda status para `scheduled`
+- [ ] Worker periódico (cron via Bull) que verifica posts com `scheduled_at <= now()` e os publica automaticamente
+- [ ] Interface no backoffice para selecionar data/hora de publicação (dia da semana, dia do mês e horário)
+- [ ] Listagem de posts agendados com opção de cancelar ou reagendar
+
+### Fase 9 — Agentes de IA
+- [ ] **Infraestrutura base dos agentes**: setup de SDK (LangChain ou similar), gerenciamento de contexto de marca (tom de voz, palavras-chave) por site
+- [ ] **Agente Roadmap de Conteúdo**: pesquisa tópicos em alta (via Google Trends API ou similar), cruza com categorias do site e gera lista priorizada de temas para o próximo ciclo
+- [ ] Endpoint `POST /api/sites/:siteId/ai/roadmap` — aciona o agente e retorna lista de temas sugeridos
+- [ ] Tela no backoffice para visualizar e aprovar temas do roadmap, adicionando-os à fila de produção
+- [ ] **Agente de Redação**: dado um tema aprovado, realiza pesquisa aprofundada, redige o rascunho do post com citação de fontes, e incorpora dados de performance dos posts anteriores para ajustar abordagem e manter tom de voz da marca
+- [ ] Endpoint `POST /api/sites/:siteId/ai/draft` — recebe tema + contexto de marca e retorna rascunho em HTML/Markdown
+- [ ] Integração do rascunho gerado diretamente no editor TipTap do backoffice para revisão humana
+- [ ] **Agente de Revisão de SEO**: analisa o rascunho final, sugere ajustes de título, meta description, densidade de palavras-chave, estrutura de headings e links internos
+- [ ] Endpoint `POST /api/sites/:siteId/ai/seo-review` — recebe conteúdo do post e retorna lista de sugestões estruturadas
+- [ ] Painel de revisão de SEO no editor de post com checklist interativo das sugestões do agente
 
 ---
 
