@@ -8,6 +8,8 @@
     "dev": "nodemon src/app.js",
     "worker": "node src/workers/buildWorker.js",
     "worker:dev": "nodemon src/workers/buildWorker.js",
+    "worker:ai": "node src/workers/aiWorker.js",
+    "worker:ai:dev": "nodemon src/workers/aiWorker.js",
     "migrate": "sequelize db:migrate",
     "migrate:undo": "sequelize db:migrate:undo:all",
     "test": "NODE_ENV=test jest --runInBand --forceExit",
@@ -24,6 +26,7 @@
   "dependencies": {
     "@aws-sdk/client-cloudfront": "^3.1037.0",
     "@aws-sdk/client-s3": "^3.1036.0",
+    "@google/generative-ai": "^0.21.0",
     "bcrypt": "^6.0.0",
     "bull": "^4.16.5",
     "cookie-parser": "^1.4.7",

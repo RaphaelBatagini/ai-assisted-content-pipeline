@@ -17,6 +17,7 @@ const socialLinksRouter = require('./routes/socialLinks');
 const uploadRouter = require('./routes/upload');
 const contactRouter = require('./routes/contact');
 const paymentRouter = require('./routes/payment');
+const contentStrategyBriefRouter = require('./routes/contentStrategyBrief');
 
 const auth = require('./middlewares/auth');
 const ownership = require('./middlewares/ownership');
@@ -81,6 +82,12 @@ app.use(
 );
 app.use('/api/upload', auth, uploadRouter);
 app.use('/api/contact', contactRouter);
+app.use(
+  '/api/sites/:siteId/content-strategy-brief',
+  auth,
+  ownership,
+  contentStrategyBriefRouter,
+);
 
 // Global error handler
 app.use((err, req, res, next) => {

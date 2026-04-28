@@ -37,11 +37,11 @@ export default function ContactPage({ site, categories, socialLinks, apiUrl, sit
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(data),
       });
-      if (!res.ok) throw new Error('Erro ao enviar mensagem.');
+      if (!res.ok) throw new Error('Failed to send message.');
       setStatus('success');
       form.reset();
     } catch (err: unknown) {
-      setErrorMsg(err instanceof Error ? err.message : 'Erro inesperado.');
+      setErrorMsg(err instanceof Error ? err.message : 'Unexpected error.');
       setStatus('error');
     }
   }
@@ -49,20 +49,20 @@ export default function ContactPage({ site, categories, socialLinks, apiUrl, sit
   return (
     <>
       <Head>
-        <title>{`Contato — ${site.name}`}</title>
-        <meta name="description" content={`Entre em contato com ${site.name}`} />
+        <title>{`Contact — ${site.name}`}</title>
+        <meta name="description" content={`Get in touch with ${site.name}`} />
       </Head>
       <Analytics site={site} />
       <Layout site={site} categories={categories} socialLinks={socialLinks}>
         <div className="contact-page">
           <div className="page-hero">
-            <h1>Contato</h1>
-            <p>Preencha o formulário abaixo e entraremos em contato em breve.</p>
+            <h1>Contact</h1>
+            <p>Fill out the form below and we will get back to you shortly.</p>
           </div>
 
           {status === 'success' && (
             <div className="alert-success">
-              Mensagem enviada com sucesso! Entraremos em contato em breve.
+              Message sent successfully! We will get back to you shortly.
             </div>
           )}
 
@@ -72,19 +72,19 @@ export default function ContactPage({ site, categories, socialLinks, apiUrl, sit
 
           <form className="contact-form" onSubmit={handleSubmit}>
             <div className="form-group">
-              <label htmlFor="name">Nome</label>
-              <input id="name" name="name" type="text" required placeholder="Seu nome" />
+              <label htmlFor="name">Name</label>
+              <input id="name" name="name" type="text" required placeholder="Your name" />
             </div>
             <div className="form-group">
-              <label htmlFor="email">E-mail</label>
-              <input id="email" name="email" type="email" required placeholder="seu@email.com" />
+              <label htmlFor="email">Email</label>
+              <input id="email" name="email" type="email" required placeholder="your@email.com" />
             </div>
             <div className="form-group">
-              <label htmlFor="message">Mensagem</label>
-              <textarea id="message" name="message" required placeholder="Sua mensagem..." />
+              <label htmlFor="message">Message</label>
+              <textarea id="message" name="message" required placeholder="Your message..." />
             </div>
             <button type="submit" className="btn-primary" disabled={status === 'loading'}>
-              {status === 'loading' ? 'Enviando...' : 'Enviar mensagem'}
+              {status === 'loading' ? 'Sending...' : 'Send message'}
             </button>
           </form>
 

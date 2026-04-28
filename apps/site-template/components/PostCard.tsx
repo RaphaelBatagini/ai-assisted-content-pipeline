@@ -7,7 +7,7 @@ interface PostCardProps {
 
 function formatDate(dateStr: string | null): string {
   if (!dateStr) return '';
-  return new Date(dateStr).toLocaleDateString('pt-BR', {
+  return new Date(dateStr).toLocaleDateString('en-US', {
     day: '2-digit',
     month: 'long',
     year: 'numeric',
@@ -36,7 +36,7 @@ export default function PostCard({ post }: PostCardProps) {
         {post.excerpt && <p className="post-card-excerpt">{post.excerpt}</p>}
         <div className="post-card-meta">
           {post.publishedAt && <span>{formatDate(post.publishedAt)}</span>}
-          {post.readingTimeMinutes && <span>{post.readingTimeMinutes} min de leitura</span>}
+          {post.readingTimeMinutes && <span>{post.readingTimeMinutes} min read</span>}
         </div>
       </div>
     </article>

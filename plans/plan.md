@@ -354,10 +354,17 @@ Pipeline GitHub Actions:
 - [x] Wildcard subdomain na CDN com Lambda@Edge
 - [x] Testes end-to-end do fluxo publicação → site ao vivo
 
-### Fase 6 — Deploy e Documentação
-- [ ] Dockerfiles de produção para cada app
-- [ ] Pipeline GitHub Actions (lint, test, build, deploy)
-- [ ] Documentação de onboarding para novos desenvolvedores
+### Fase 6 — Agentes de IA
+- [ ] **Infraestrutura base dos agentes**: setup de SDK (LangChain ou similar), gerenciamento de contexto de marca (tom de voz, palavras-chave) por site
+- [ ] **Agente Roadmap de Conteúdo**: pesquisa tópicos em alta (via Google Trends API ou similar), cruza com categorias do site e gera lista priorizada de temas para o próximo ciclo
+- [ ] Endpoint `POST /api/sites/:siteId/ai/roadmap` — aciona o agente e retorna lista de temas sugeridos
+- [ ] Tela no backoffice para visualizar e aprovar temas do roadmap, adicionando-os à fila de produção
+- [ ] **Agente de Redação**: dado um tema aprovado, realiza pesquisa aprofundada, redige o rascunho do post com citação de fontes, e incorpora dados de performance dos posts anteriores para ajustar abordagem e manter tom de voz da marca
+- [ ] Endpoint `POST /api/sites/:siteId/ai/draft` — recebe tema + contexto de marca e retorna rascunho em HTML/Markdown
+- [ ] Integração do rascunho gerado diretamente no editor TipTap do backoffice para revisão humana
+- [ ] **Agente de Revisão de SEO**: analisa o rascunho final, sugere ajustes de título, meta description, densidade de palavras-chave, estrutura de headings e links internos
+- [ ] Endpoint `POST /api/sites/:siteId/ai/seo-review` — recebe conteúdo do post e retorna lista de sugestões estruturadas
+- [ ] Painel de revisão de SEO no editor de post com checklist interativo das sugestões do agente
 
 ### Fase 7 — Tracking e Analytics
 - [ ] Tracking de cliques em botões de conversão (CTA "entrar em contato") nos sites estáticos via eventos GA/GTM
@@ -374,17 +381,10 @@ Pipeline GitHub Actions:
 - [ ] Interface no backoffice para selecionar data/hora de publicação (dia da semana, dia do mês e horário)
 - [ ] Listagem de posts agendados com opção de cancelar ou reagendar
 
-### Fase 9 — Agentes de IA
-- [ ] **Infraestrutura base dos agentes**: setup de SDK (LangChain ou similar), gerenciamento de contexto de marca (tom de voz, palavras-chave) por site
-- [ ] **Agente Roadmap de Conteúdo**: pesquisa tópicos em alta (via Google Trends API ou similar), cruza com categorias do site e gera lista priorizada de temas para o próximo ciclo
-- [ ] Endpoint `POST /api/sites/:siteId/ai/roadmap` — aciona o agente e retorna lista de temas sugeridos
-- [ ] Tela no backoffice para visualizar e aprovar temas do roadmap, adicionando-os à fila de produção
-- [ ] **Agente de Redação**: dado um tema aprovado, realiza pesquisa aprofundada, redige o rascunho do post com citação de fontes, e incorpora dados de performance dos posts anteriores para ajustar abordagem e manter tom de voz da marca
-- [ ] Endpoint `POST /api/sites/:siteId/ai/draft` — recebe tema + contexto de marca e retorna rascunho em HTML/Markdown
-- [ ] Integração do rascunho gerado diretamente no editor TipTap do backoffice para revisão humana
-- [ ] **Agente de Revisão de SEO**: analisa o rascunho final, sugere ajustes de título, meta description, densidade de palavras-chave, estrutura de headings e links internos
-- [ ] Endpoint `POST /api/sites/:siteId/ai/seo-review` — recebe conteúdo do post e retorna lista de sugestões estruturadas
-- [ ] Painel de revisão de SEO no editor de post com checklist interativo das sugestões do agente
+### Fase 9 — Deploy e Documentação
+- [ ] Dockerfiles de produção para cada app
+- [ ] Pipeline GitHub Actions (lint, test, build, deploy)
+- [ ] Documentação de onboarding para novos desenvolvedores
 
 ---
 

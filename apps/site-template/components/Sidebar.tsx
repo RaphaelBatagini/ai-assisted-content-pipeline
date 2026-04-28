@@ -20,20 +20,20 @@ export default function Sidebar({
   onSearch,
 }: SidebarProps) {
   return (
-    <aside className="blog-sidebar" aria-label="Barra lateral">
+    <aside className="blog-sidebar" aria-label="Sidebar">
       <div className="sidebar-widget">
-        <h3 className="sidebar-widget-title">Buscar</h3>
+        <h3 className="sidebar-widget-title">Search</h3>
         <SearchInput value={searchValue} onChange={onSearch} />
       </div>
 
       <div className="sidebar-widget">
-        <h3 className="sidebar-widget-title">Categorias</h3>
+        <h3 className="sidebar-widget-title">Categories</h3>
         <CategoryFilter categories={categories} activeSlug={activeCategory} />
       </div>
 
       {featuredPosts.length > 0 && (
         <div className="sidebar-widget">
-          <h3 className="sidebar-widget-title">Artigos em destaque</h3>
+          <h3 className="sidebar-widget-title">Featured articles</h3>
           <SidebarFeatured posts={featuredPosts} />
         </div>
       )}

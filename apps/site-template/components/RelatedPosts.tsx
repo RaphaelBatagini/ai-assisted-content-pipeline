@@ -22,8 +22,8 @@ export default function RelatedPosts({ currentPostId, categorySlug, allPosts }: 
   if (related.length === 0) return null;
 
   return (
-    <section className="related-posts" aria-label="Artigos relacionados">
-      <h2 className="related-posts-title">Artigos relacionados</h2>
+    <section className="related-posts" aria-label="Related articles">
+      <h2 className="related-posts-title">Related articles</h2>
       <div className="related-posts-grid">
         {related.map((post) => (
           <BlogCard key={post.id} post={post} />

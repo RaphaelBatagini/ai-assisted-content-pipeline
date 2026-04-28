@@ -21,7 +21,7 @@ interface ArticlePageProps {
 
 function formatDate(dateStr: string | null): string {
   if (!dateStr) return '';
-  return new Date(dateStr).toLocaleDateString('pt-BR', {
+  return new Date(dateStr).toLocaleDateString('en-US', {
     day: '2-digit',
     month: 'long',
     year: 'numeric',
@@ -97,10 +97,10 @@ export default function ArticlePage({
               </p>
             )}
             <div className="post-meta">
-              {post.author && <span>Por {post.author}</span>}
+              {post.author && <span>By {post.author}</span>}
               {post.publishedAt && <span>{formatDate(post.publishedAt)}</span>}
               {post.readingTimeMinutes && (
-                <span>{post.readingTimeMinutes} min de leitura</span>
+                <span>{post.readingTimeMinutes} min read</span>
               )}
             </div>
           </header>

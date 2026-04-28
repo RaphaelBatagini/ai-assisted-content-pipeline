@@ -19,20 +19,20 @@ import {
 } from "lucide-react";
 
 export const metadata: Metadata = {
-  title: "Plataforma de IA para Agências | Crie Sites e Conteúdo Automático",
+  title: "AI Platform for Agencies | Create Sites and Automated Content",
   description:
-    "Automatize sites, blogs e SEO para seus clientes. Plataforma white-label para agências escalarem com receita recorrente.",
+    "Automate sites, blogs and SEO for your clients. White-label platform for agencies to scale with recurring revenue.",
   keywords: [
-    "automação de marketing para agências",
-    "geração de conteúdo com IA",
-    "SaaS para agências",
-    "white label marketing digital",
-    "criação de sites com IA",
-    "SEO automatizado",
-    "blog automático",
-    "conteúdo para clientes automático",
-    "ferramenta para agência escalar",
-    "renda recorrente agência",
+    "marketing automation for agencies",
+    "AI content generation",
+    "SaaS for agencies",
+    "white label digital marketing",
+    "AI website creation",
+    "automated SEO",
+    "automatic blog",
+    "automated client content",
+    "agency scaling tool",
+    "agency recurring revenue",
   ],
 };
 
@@ -46,20 +46,20 @@ export default function RootPage() {
             <div className="h-8 w-8 rounded-md bg-primary flex items-center justify-center">
               <Zap className="h-4 w-4 text-white" />
             </div>
-            <span className="font-bold text-lg">AgênciaIA</span>
+            <span className="font-bold text-lg">AgencyAI</span>
           </div>
           <nav className="flex items-center gap-3">
             <Link
               href="/login"
               className="text-sm font-medium text-muted-foreground hover:text-foreground transition-colors"
             >
-              Entrar
+              Sign in
             </Link>
             <Link
               href="/register"
               className="inline-flex items-center justify-center rounded-md bg-primary px-4 py-2 text-sm font-medium text-white hover:bg-primary/90 transition-colors"
             >
-              Começar gratuitamente
+              Get started for free
             </Link>
           </nav>
         </div>
@@ -70,26 +70,25 @@ export default function RootPage() {
         <div className="mx-auto max-w-4xl text-center">
           <div className="inline-flex items-center gap-2 rounded-full border border-brand-purple/30 bg-brand-purple/10 px-3 py-1 text-xs font-medium text-brand-purple mb-6">
             <Zap className="h-3 w-3" />
-            Automação de marketing para agências com IA
+            AI marketing automation for agencies
           </div>
           <h1 className="text-4xl font-extrabold leading-tight tracking-tight sm:text-5xl lg:text-6xl mb-6">
-            Crie sites e conteúdo com IA —{" "}
+            Create sites and content with AI —{" "}
             <span className="text-primary">
-              e transforme isso em receita recorrente
+              and turn it into recurring revenue
             </span>{" "}
-            para sua agência
+            for your agency
           </h1>
           <p className="text-xl text-muted-foreground mb-8 max-w-2xl mx-auto">
-            Automatize a criação de blogs, posts e estratégias de SEO para seus
-            clientes — enquanto escala seu faturamento com um modelo SaaS
-            white-label.
+            Automate the creation of blogs, posts and SEO strategies for your
+            clients — while scaling your revenue with a white-label SaaS model.
           </p>
           <ul className="flex flex-col sm:flex-row flex-wrap justify-center gap-3 text-sm text-muted-foreground mb-10">
             {[
-              "Gere sites completos em minutos",
-              "Produza conteúdo otimizado para SEO automaticamente",
-              "Gerencie múltiplos clientes em um só lugar",
-              "Revenda com sua própria marca",
+              "Generate complete websites in minutes",
+              "Produce SEO-optimized content automatically",
+              "Manage multiple clients in one place",
+              "Resell with your own brand",
             ].map((item) => (
               <li key={item} className="flex items-center gap-2">
                 <CheckCircle2 className="h-4 w-4 text-primary shrink-0" />
@@ -102,35 +101,35 @@ export default function RootPage() {
               href="/register"
               className="inline-flex items-center justify-center rounded-md bg-primary px-8 py-3 text-base font-semibold text-white hover:bg-primary/90 transition-colors"
             >
-              Começar agora gratuitamente
+              Get started for free now
               <ChevronRight className="ml-2 h-4 w-4" />
             </Link>
             <Link
-              href="#como-funciona"
+              href="#how-it-works"
               className="inline-flex items-center justify-center rounded-md border px-8 py-3 text-base font-semibold hover:bg-muted transition-colors"
             >
-              Ver demonstração
+              See demo
             </Link>
           </div>
         </div>
       </section>
 
-      {/* Problema */}
+      {/* Problem */}
       <section className="bg-muted/40 py-20 px-4">
         <div className="mx-auto max-w-4xl">
           <h2 className="text-3xl font-bold text-center mb-4">
-            Agências perdem tempo e dinheiro com tarefas que não escalam
+            Agencies waste time and money on tasks that don’t scale
           </h2>
           <p className="text-center text-muted-foreground mb-10 max-w-xl mx-auto">
-            Enquanto isso, clientes querem resultados constantes — sem pagar
-            mais por isso.
+            Meanwhile, clients want consistent results — without paying more
+            for it.
           </p>
           <div className="grid sm:grid-cols-2 gap-4 max-w-2xl mx-auto">
             {[
-              "Criação manual de conteúdo consome horas por semana",
-              "Blogs inconsistentes que não geram tráfego",
-              "Dificuldade em provar ROI para clientes",
-              "Baixa previsibilidade de receita mensal",
+              "Manual content creation consumes hours per week",
+              "Inconsistent blogs that don't generate traffic",
+              "Difficulty proving ROI to clients",
+              "Low predictability of monthly revenue",
             ].map((item) => (
               <div
                 key={item}
@@ -146,32 +145,32 @@ export default function RootPage() {
         </div>
       </section>
 
-      {/* Solução */}
+      {/* Solution */}
       <section className="bg-background py-20 px-4">
         <div className="mx-auto max-w-3xl text-center">
           <h2 className="text-3xl font-bold mb-4">
-            Uma plataforma que transforma conteúdo em{" "}
-            <span className="text-primary">crescimento previsível</span>
+            A platform that transforms content into{" "}
+            <span className="text-primary">predictable growth</span>
           </h2>
           <p className="text-muted-foreground text-lg">
-            Nossa plataforma usa IA para automatizar toda a operação de conteúdo
-            da sua agência — da criação à otimização contínua.
+            Our platform uses AI to automate your agency’s entire content
+            operation — from creation to continuous optimization.
           </p>
           <p className="text-muted-foreground text-lg mt-2">
-            Você entrega mais valor, com menos esforço.
+            You deliver more value, with less effort.
           </p>
         </div>
       </section>
 
-      {/* Como Funciona */}
-      <section id="como-funciona" className="bg-muted/40 py-20 px-4">
+      {/* How It Works */}
+      <section id="how-it-works" className="bg-muted/40 py-20 px-4">
         <div className="mx-auto max-w-4xl">
           <h2 className="text-3xl font-bold text-center mb-3">
-            SEO automatizado em 5 passos simples
+            Automated SEO in 5 simple steps
           </h2>
           <p className="text-center text-muted-foreground mb-12">
-            Da criação do site à otimização contínua — tudo sem precisar de
-            conhecimento técnico.
+            From site creation to continuous optimization — all without needing
+            technical knowledge.
           </p>
           <div className="relative">
             <div className="absolute left-5 top-6 bottom-6 w-px bg-border hidden sm:block" />
@@ -179,28 +178,28 @@ export default function RootPage() {
               {[
                 {
                   icon: Globe,
-                  title: "Crie o site do cliente em minutos",
-                  desc: "A IA gera estrutura, layout e conteúdo base a partir do briefing do seu cliente.",
+                  title: "Create the client’s site in minutes",
+                  desc: "AI generates structure, layout and base content from your client’s brief.",
                 },
                 {
                   icon: Settings,
-                  title: "Defina o tom de voz",
-                  desc: "Baseado em conteúdo existente ou briefing — o conteúdo sempre soa como a marca do cliente.",
+                  title: "Define the tone of voice",
+                  desc: "Based on existing content or brief — the content always sounds like the client’s brand.",
                 },
                 {
                   icon: FileText,
-                  title: "Automatize o conteúdo",
-                  desc: "Posts são gerados e publicados automaticamente, seguindo um calendário editorial inteligente.",
+                  title: "Automate content",
+                  desc: "Posts are generated and published automatically, following an intelligent editorial calendar.",
                 },
                 {
                   icon: Activity,
-                  title: "Acompanhe a performance",
-                  desc: "Dados de SEO e conversão em tempo real, organizados por cliente, em um único painel.",
+                  title: "Track performance",
+                  desc: "SEO and conversion data in real time, organized by client, in a single dashboard.",
                 },
                 {
                   icon: Lightbulb,
-                  title: "Otimize com IA",
-                  desc: "Sugestões automáticas para melhorar ranqueamento, engajamento e taxa de conversão.",
+                  title: "Optimize with AI",
+                  desc: "Automatic suggestions to improve ranking, engagement and conversion rate.",
                 },
               ].map((step, i) => (
                 <li
@@ -224,47 +223,46 @@ export default function RootPage() {
         </div>
       </section>
 
-      {/* Benefícios */}
+      {/* Benefits */}
       <section className="bg-background py-20 px-4">
         <div className="mx-auto max-w-5xl">
           <h2 className="text-3xl font-bold text-center mb-3">
-            Feito para agências que querem escalar
+            Built for agencies that want to scale
           </h2>
           <p className="text-center text-muted-foreground mb-12 max-w-2xl mx-auto">
-            Todas as ferramentas que sua agência precisa para crescer sem
-            aumentar a equipe.
+            All the tools your agency needs to grow without expanding the team.
           </p>
           <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-5">
             {[
               {
                 icon: Users,
-                title: "Escala sem aumentar equipe",
-                desc: "Atenda mais clientes sem crescer sua operação. Automatize o trabalho repetitivo.",
+                title: "Scale without expanding the team",
+                desc: "Serve more clients without growing your operation. Automate repetitive work.",
               },
               {
                 icon: TrendingUp,
-                title: "Receita recorrente previsível",
-                desc: "Transforme serviços pontuais em assinaturas mensais com previsibilidade de caixa.",
+                title: "Predictable recurring revenue",
+                desc: "Turn one-time services into monthly subscriptions with cash flow predictability.",
               },
               {
                 icon: Tag,
-                title: "White-label completo",
-                desc: "Venda como se fosse seu próprio produto — sua marca, seus preços, seus clientes.",
+                title: "Full white-label",
+                desc: "Sell as if it were your own product — your brand, your prices, your clients.",
               },
               {
                 icon: Search,
-                title: "SEO de verdade",
-                desc: "Conteúdo estruturado e otimizado para ranquear no Google desde o primeiro post.",
+                title: "Real SEO",
+                desc: "Structured and optimized content to rank on Google from the first post.",
               },
               {
                 icon: Clock,
-                title: "Menos operação, mais estratégia",
-                desc: "Automatize o operacional e libere sua equipe para trabalho de alto valor.",
+                title: "Less operations, more strategy",
+                desc: "Automate the operational and free your team for high-value work.",
               },
               {
                 icon: BarChart3,
-                title: "Dados em tempo real",
-                desc: "Acompanhe performance de todos os clientes em um painel unificado e intuitivo.",
+                title: "Real-time data",
+                desc: "Track performance for all clients in a unified and intuitive dashboard.",
               },
             ].map((benefit) => (
               <div
@@ -287,21 +285,21 @@ export default function RootPage() {
         <div className="mx-auto max-w-3xl text-center">
           <div className="mb-6 inline-flex items-center gap-2 rounded-full border border-brand-purple/50 bg-brand-purple/20 px-3 py-1 text-xs font-medium text-white">
             <Tag className="h-3 w-3" />
-            White-label marketing digital
+            White-label digital marketing
           </div>
           <h2 className="mb-4 text-3xl font-bold">
-            Seu próprio SaaS, sem precisar desenvolver nada
+            Your own SaaS, without needing to develop anything
           </h2>
           <p className="mb-8 text-lg text-background/80">
-            Ofereça a plataforma com a sua marca, seus preços e para seus
-            clientes. Transforme sua agência em uma empresa de tecnologia — sem
-            investir em desenvolvimento.
+            Offer the platform with your brand, your prices and for your
+            clients. Transform your agency into a technology company — without
+            investing in development.
           </p>
           <div className="mb-10 grid sm:grid-cols-3 gap-4">
             {[
-              { label: "Sua marca", desc: "Logo, cores e domínio próprio" },
-              { label: "Seus preços", desc: "Defina margens como quiser" },
-              { label: "Seus clientes", desc: "Relacionamento 100% seu" },
+              { label: "Your brand", desc: "Logo, colors and own domain" },
+              { label: "Your prices", desc: "Set margins however you want" },
+              { label: "Your clients", desc: "100% your relationship" },
             ].map((item) => (
               <div
                 key={item.label}
@@ -316,37 +314,37 @@ export default function RootPage() {
             href="/register"
             className="inline-flex items-center justify-center rounded-md bg-background px-8 py-3 text-base font-semibold text-foreground hover:bg-background/90 transition-colors"
           >
-            Quero meu próprio SaaS
+            I want my own SaaS
             <ChevronRight className="ml-2 h-4 w-4" />
           </Link>
         </div>
       </section>
 
-      {/* Prova Social */}
+      {/* Social Proof */}
       <section className="bg-muted/40 py-20 px-4">
         <div className="mx-auto max-w-4xl">
           <h2 className="text-3xl font-bold text-center mb-3">
-            Resultados que falam por si
+            Results that speak for themselves
           </h2>
           <p className="text-center text-muted-foreground mb-12">
-            Agências que automatizaram sua operação de conteúdo com IA.
+            Agencies that automated their content operation with AI.
           </p>
           <div className="grid sm:grid-cols-3 gap-6">
             {[
               {
                 metric: "+300%",
-                label: "Aumento de tráfego orgânico",
-                sub: "em 6 meses de uso",
+                label: "Increase in organic traffic",
+                sub: "in 6 months of use",
               },
               {
                 metric: "-70%",
-                label: "Tempo gasto com conteúdo",
-                sub: "liberado para estratégia",
+                label: "Time spent on content",
+                sub: "freed up for strategy",
               },
               {
                 metric: "+2x",
-                label: "Retenção de clientes",
-                sub: "com entregas consistentes",
+                label: "Client retention",
+                sub: "with consistent deliveries",
               },
             ].map((stat) => (
               <div
@@ -364,34 +362,34 @@ export default function RootPage() {
         </div>
       </section>
 
-      {/* Planos / Monetização */}
+      {/* Plans / Monetization */}
       <section className="bg-background py-20 px-4">
         <div className="mx-auto max-w-4xl">
           <h2 className="text-3xl font-bold text-center mb-3">
-            Monetize como quiser
+            Monetize however you want
           </h2>
           <p className="text-center text-muted-foreground mb-12 max-w-xl mx-auto">
-            Você tem total flexibilidade para usar, cobrar ou revender a
-            plataforma do jeito que faz mais sentido para seu negócio.
+            You have total flexibility to use, charge or resell the platform in
+            whatever way makes most sense for your business.
           </p>
           <div className="grid sm:grid-cols-3 gap-5">
             {[
               {
-                title: "Uso interno",
-                desc: "Use para todos os seus clientes e reduza o custo e tempo da operação de conteúdo.",
-                cta: "Começar agora",
+                title: "Internal use",
+                desc: "Use for all your clients and reduce the cost and time of content operations.",
+                cta: "Get started now",
                 highlight: false,
               },
               {
-                title: "Cobrar mensalidade",
-                desc: "Adicione a plataforma ao seu pacote de serviços e gere receita recorrente previsível.",
-                cta: "Quero recorrência",
+                title: "Charge a monthly fee",
+                desc: "Add the platform to your service package and generate predictable recurring revenue.",
+                cta: "I want recurring revenue",
                 highlight: true,
               },
               {
-                title: "Vender como SaaS",
-                desc: "Lance seu próprio produto de SaaS white-label e crie uma nova linha de negócios.",
-                cta: "Criar meu SaaS",
+                title: "Sell as SaaS",
+                desc: "Launch your own white-label SaaS product and create a new line of business.",
+                cta: "Create my SaaS",
                 highlight: false,
               },
             ].map((plan) => (
@@ -403,7 +401,7 @@ export default function RootPage() {
               >
                 {plan.highlight && (
                   <span className="mb-3 inline-flex w-fit items-center rounded-full bg-brand-purple px-2.5 py-0.5 text-xs font-semibold text-white">
-                    Mais popular
+                    Most popular
                   </span>
                 )}
                 <h3 className="mb-2 text-lg font-bold">{plan.title}</h3>
@@ -430,32 +428,32 @@ export default function RootPage() {
       <section className="bg-muted/40 py-20 px-4">
         <div className="mx-auto max-w-3xl">
           <h2 className="text-3xl font-bold text-center mb-3">
-            Perguntas frequentes sobre a ferramenta para agência escalar
+            Frequently asked questions about the agency scaling tool
           </h2>
           <p className="text-center text-muted-foreground mb-12">
-            Tire suas dúvidas antes de começar.
+            Get your questions answered before getting started.
           </p>
           <div className="space-y-3">
             {[
               {
-                q: "Isso substitui redatores?",
-                a: "Não necessariamente. A plataforma automatiza a geração de rascunhos e posts otimizados para SEO, mas sua equipe pode revisar e ajustar cada peça. Você decide o nível de automação — de 100% automático a assistido por humanos.",
+                q: "Does this replace writers?",
+                a: "Not necessarily. The platform automates the generation of drafts and SEO-optimized posts, but your team can review and adjust each piece. You decide the level of automation — from 100% automatic to human-assisted.",
               },
               {
-                q: "Funciona para qualquer nicho?",
-                a: "Sim. A IA adapta o conteúdo ao segmento do cliente — saúde, tecnologia, varejo, serviços, educação e muito mais. Você configura o tom de voz e a plataforma aprende o estilo de cada cliente.",
+                q: "Does it work for any niche?",
+                a: "Yes. The AI adapts content to the client's segment — health, technology, retail, services, education and much more. You configure the tone of voice and the platform learns each client's style.",
               },
               {
-                q: "Posso usar com meus clientes atuais?",
-                a: "Com certeza. Você pode migrar clientes existentes para a plataforma, criar sites e começar a gerar conteúdo de forma automática. Não há necessidade de mudar sua metodologia atual.",
+                q: "Can I use it with my current clients?",
+                a: "Absolutely. You can migrate existing clients to the platform, create sites and start generating content automatically. There's no need to change your current methodology.",
               },
               {
-                q: "Preciso saber SEO para usar?",
-                a: "Não. A plataforma cuida de toda a parte técnica de SEO automaticamente — estrutura de URLs, meta tags, densidade de palavras-chave e links internos. Você recebe o conteúdo pronto para ranquear.",
+                q: "Do I need to know SEO to use it?",
+                a: "No. The platform handles all the technical SEO automatically — URL structure, meta tags, keyword density and internal links. You receive content ready to rank.",
               },
               {
-                q: "Como funciona o white-label?",
-                a: "Você personaliza a plataforma com sua marca: logo, cores, domínio e e-mails. Seus clientes acessam uma solução com a identidade da sua agência. Você define os preços e mantém 100% do relacionamento com o cliente.",
+                q: "How does white-label work?",
+                a: "You customize the platform with your brand: logo, colors, domain and emails. Your clients access a solution with your agency's identity. You set the prices and maintain 100% of the client relationship.",
               },
             ].map((faq) => (
               <details
@@ -475,20 +473,20 @@ export default function RootPage() {
         </div>
       </section>
 
-      {/* CTA Final */}
+      {/* Final CTA */}
       <section className="bg-primary py-24 px-4 text-white">
         <div className="mx-auto max-w-3xl text-center">
           <h2 className="mb-4 text-4xl font-extrabold">
-            Comece a escalar sua agência hoje
+            Start scaling your agency today
           </h2>
           <p className="mb-10 text-xl text-white/80">
-            Sem complexidade. Sem equipe extra. Só crescimento.
+            No complexity. No extra team. Just growth.
           </p>
           <Link
             href="/register"
             className="inline-flex items-center justify-center rounded-md bg-white px-10 py-4 text-base font-bold text-primary hover:bg-white/90 transition-colors"
           >
-            Começar agora
+            Get started now
             <ChevronRight className="ml-2 h-5 w-5" />
           </Link>
         </div>
@@ -501,21 +499,21 @@ export default function RootPage() {
             <div className="h-6 w-6 rounded bg-primary flex items-center justify-center">
               <Zap className="h-3 w-3 text-white" />
             </div>
-            <span className="font-medium text-foreground">AgênciaIA</span>
+            <span className="font-medium text-foreground">AgencyAI</span>
           </div>
-          <p>© {new Date().getFullYear()} AgênciaIA. Todos os direitos reservados.</p>
+          <p>© {new Date().getFullYear()} AgencyAI. All rights reserved.</p>
           <div className="flex gap-4">
             <Link
               href="/login"
               className="hover:text-foreground transition-colors"
             >
-              Entrar
+              Sign in
             </Link>
             <Link
               href="/register"
               className="hover:text-foreground transition-colors"
             >
-              Criar conta
+              Create account
             </Link>
           </div>
         </div>

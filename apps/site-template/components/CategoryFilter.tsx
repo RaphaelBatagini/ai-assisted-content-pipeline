@@ -8,13 +8,13 @@ interface CategoryFilterProps {
 
 export default function CategoryFilter({ categories, activeSlug }: CategoryFilterProps) {
   return (
-    <nav className="category-filters" aria-label="Filtrar por categoria">
+    <nav className="category-filters" aria-label="Filter by category">
       <Link
         href="/blog/"
         className={`category-chip${!activeSlug ? ' category-chip--active' : ''}`}
         aria-current={!activeSlug ? 'page' : undefined}
       >
-        Todos
+        All
       </Link>
       {categories.map((cat) => (
         <Link

@@ -3,7 +3,7 @@ import { Post } from '../lib/types';
 
 function formatDate(dateStr: string | null): string {
   if (!dateStr) return '';
-  return new Date(dateStr).toLocaleDateString('pt-BR', {
+  return new Date(dateStr).toLocaleDateString('en-US', {
     day: '2-digit',
     month: 'short',
     year: 'numeric',
@@ -36,14 +36,14 @@ export default function FeaturedCard({ post }: { post: Post }) {
         <div className="blog-card-meta">
           {post.author && <span>{post.author}</span>}
           {post.publishedAt && <span>{formatDate(post.publishedAt)}</span>}
-          {post.readingTimeMinutes && <span>{post.readingTimeMinutes} min de leitura</span>}
+          {post.readingTimeMinutes && <span>{post.readingTimeMinutes} min read</span>}
         </div>
         <Link
           href={`/blog/${post.slug}/`}
           className="blog-card-cta"
-          aria-label={`Ler artigo em destaque: ${post.title}`}
+          aria-label={`Read featured article: ${post.title}`}
         >
-          Ler artigo →
+          Read article →
         </Link>
       </div>
     </article>

@@ -1,26 +1,26 @@
 [
   {
     "id": "1",
-    "name": "Tecnologia",
-    "slug": "tecnologia",
-    "description": "Artigos sobre tecnologia e programação."
+    "name": "Technology",
+    "slug": "technology",
+    "description": "Articles on technology and programming."
   },
   {
     "id": "2",
-    "name": "Dicas",
-    "slug": "dicas",
-    "description": "Dicas práticas do dia a dia."
+    "name": "Tips",
+    "slug": "tips",
+    "description": "Practical tips for everyday life."
   },
   {
     "id": "3",
-    "name": "Gestão",
-    "slug": "gestao",
-    "description": "Como gerir melhor o seu negócio."
+    "name": "Management",
+    "slug": "management",
+    "description": "How to better manage your business."
   },
   {
     "id": "4",
-    "name": "Finanças",
-    "slug": "financas",
-    "description": "Educação financeira para empreendedores."
+    "name": "Finance",
+    "slug": "finance",
+    "description": "Financial education for entrepreneurs."
   }
 ]

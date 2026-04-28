@@ -1,11 +1,11 @@
 "use client";
 
 import Link from "next/link";
-import { useQuery } from "@tanstack/react-query";
-import api from "@/lib/api";
+import { useQuery, useQueries } from "@tanstack/react-query";
+import api, { getContentStrategyBrief } from "@/lib/api";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { Globe, Plus, ExternalLink } from "lucide-react";
+import { Globe, Plus, ExternalLink, Sparkles, Loader2, AlertTriangle } from "lucide-react";
 
 interface Site {
   id: string;
@@ -14,11 +14,68 @@ interface Site {
   colorPalette: string;
 }
 
+interface Brief {
+  id: string;
+  status: string;
+}
+
+function BriefBadge({ brief, isPending }: { brief: Brief | null | undefined; isPending: boolean }) {
+  if (isPending) return null;
+
+  if (brief === null) {
+    return (
+      <Link
+        href="#"
+        className="inline-flex items-center gap-1 rounded-full bg-amber-100 px-2 py-0.5 text-xs font-medium text-amber-700 hover:bg-amber-200"
+      >
+        <Sparkles className="w-3 h-3" />
+        No AI brief
+      </Link>
+    );
+  }
+
+  if (brief?.status === "researching" || brief?.status === "writing" || brief?.status === "pending") {
+    return (
+      <span className="inline-flex items-center gap-1 rounded-full bg-blue-100 px-2 py-0.5 text-xs font-medium text-blue-700">
+        <Loader2 className="w-3 h-3 animate-spin" />
+        Generating…
+      </span>
+    );
+  }
+
+  if (brief?.status === "error") {
+    return (
+      <span className="inline-flex items-center gap-1 rounded-full bg-red-100 px-2 py-0.5 text-xs font-medium text-red-700">
+        <AlertTriangle className="w-3 h-3" />
+        Generation failed
+      </span>
+    );
+  }
+
+  return null;
+}
+
 export default function DashboardPage() {
   const { data: sites = [], isLoading } = useQuery<Site[]>({
     queryKey: ["sites"],
     queryFn: () => api.get("/api/sites").then((r) => r.data),
   });
+
+  const briefResults = useQueries({
+    queries: sites.map((site) => ({
+      queryKey: ["content-strategy-brief", site.id],
+      queryFn: (): Promise<Brief | null> =>
+        getContentStrategyBrief(site.id).catch((err: { response?: { status?: number } }) => {
+          if (err?.response?.status === 404) return null;
+          throw err;
+        }),
+      retry: false,
+    })),
+  });
+
+  const briefBySiteId = Object.fromEntries(
+    sites.map((site, i) => [site.id, briefResults[i]])
+  );
 
   return (
     <div className="space-y-6">
@@ -55,7 +112,13 @@ export default function DashboardPage() {
         </div>
       ) : (
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-          {sites.map((site) => (
+          {sites.map((site) => {
+            const briefQuery = briefBySiteId[site.id];
+            const brief = briefQuery?.data;
+            const briefPending = briefQuery?.isPending ?? true;
+            const missingBrief = !briefPending && brief === null;
+
+            return (
             <Card key={site.id} className="hover:shadow-md transition-shadow">
               <CardHeader className="pb-2">
                 <div className="flex items-start justify-between">
@@ -68,17 +131,29 @@ export default function DashboardPage() {
                 </div>
                 <CardTitle className="text-base">{site.name}</CardTitle>
                 <CardDescription className="font-mono text-xs">/{site.slug}</CardDescription>
+                <div className="pt-1">
+                  <BriefBadge brief={brief} isPending={briefPending} />
+                </div>
               </CardHeader>
-              <CardContent className="flex gap-2">
+              <CardContent className="flex flex-wrap gap-2">
                 <Button variant="outline" size="sm" asChild>
                   <Link href={`/sites/${site.id}/posts`}>Posts</Link>
                 </Button>
                 <Button variant="outline" size="sm" asChild>
                   <Link href={`/sites/${site.id}/settings`}>Settings</Link>
                 </Button>
+                {missingBrief && (
+                  <Button size="sm" variant="secondary" asChild className="gap-1">
+                    <Link href={`/sites/${site.id}/content-strategy-brief`}>
+                      <Sparkles className="w-3 h-3" />
+                      Generate with AI
+                    </Link>
+                  </Button>
+                )}
               </CardContent>
             </Card>
-          ))}
+            );
+          })}
         </div>
       )}
     </div>

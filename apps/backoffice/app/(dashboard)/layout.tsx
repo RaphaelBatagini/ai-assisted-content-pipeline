@@ -3,9 +3,9 @@
 import { useEffect } from "react";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
-import { useQuery } from "@tanstack/react-query";
+import { useQuery, useQueries } from "@tanstack/react-query";
 import { useAuth } from "@/context/AuthContext";
-import api from "@/lib/api";
+import api, { getContentStrategyBrief } from "@/lib/api";
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
 import { cn } from "@/lib/utils";
@@ -19,13 +19,72 @@ import {
   PlusCircle,
   ChevronDown,
   ChevronUp,
+  Sparkles,
 } from "lucide-react";
 import React from "react";
 
 interface Site {
-  id: number;
+  id: string;
   name: string;
   slug: string;
+}
+
+interface Brief {
+  id: string;
+  status: string;
+}
+
+function GlobalBriefAlert() {
+  const { data: sites = [] } = useQuery<Site[]>({
+    queryKey: ["sites"],
+    queryFn: () => api.get("/api/sites").then((r) => r.data),
+  });
+
+  const briefResults = useQueries({
+    queries: sites.map((site) => ({
+      queryKey: ["content-strategy-brief", site.id],
+      queryFn: (): Promise<Brief | null> =>
+        getContentStrategyBrief(site.id).catch((err: { response?: { status?: number } }) => {
+          if (err?.response?.status === 404) return null;
+          throw err;
+        }),
+      retry: false,
+    })),
+  });
+
+  const allSettled = briefResults.every((r) => !r.isPending);
+  if (!allSettled || sites.length === 0) return null;
+
+  const missingSites = sites.filter((_, i) => briefResults[i].data === null);
+  if (missingSites.length === 0) return null;
+
+  return (
+    <div className="flex items-center gap-3 px-4 py-2.5 bg-amber-50 border-b border-amber-200 text-sm text-amber-800 shrink-0">
+      <Sparkles className="w-4 h-4 shrink-0 text-amber-600" />
+      <span className="flex-1">
+        {missingSites.length === 1
+          ? <><strong>{missingSites[0].name}</strong> is missing a Content Strategy Brief.</>
+          : <><strong>{missingSites.length} of your sites</strong> are missing a Content Strategy Brief.</>
+        }
+        {" "}Let AI generate a content roadmap and draft posts automatically.
+      </span>
+      {missingSites.length === 1 ? (
+        <Link
+          href={`/sites/${missingSites[0].id}/content-strategy-brief`}
+          className="shrink-0 rounded-md bg-amber-600 px-3 py-1 text-xs font-semibold text-white hover:bg-amber-700 whitespace-nowrap"
+        >
+          Generate with AI
+        </Link>
+      ) : (
+        <Link
+          href="/dashboard"
+          className="shrink-0 rounded-md bg-amber-600 px-3 py-1 text-xs font-semibold text-white hover:bg-amber-700 whitespace-nowrap"
+        >
+          View sites
+        </Link>
+      )}
+    </div>
+  );
 }
 
 function SiteNavItem({ site }: { site: Site }) {
@@ -59,6 +118,9 @@ function SiteNavItem({ site }: { site: Site }) {
           </NavLink>
           <NavLink href={`${baseHref}/posts`} icon={<FileText className="w-3 h-3" />}>
             Posts
+          </NavLink>
+          <NavLink href={`${baseHref}/content-strategy-brief`} icon={<Sparkles className="w-3 h-3" />}>
+            Content Strategy Brief
           </NavLink>
         </div>
       )}
@@ -155,7 +217,10 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
   return (
     <div className="flex h-screen overflow-hidden">
       <Sidebar />
-      <main className="flex-1 overflow-y-auto bg-muted/20 p-6">{children}</main>
+      <div className="flex-1 flex flex-col overflow-hidden">
+        <GlobalBriefAlert />
+        <main className="flex-1 overflow-y-auto bg-muted/20 p-6">{children}</main>
+      </div>
     </div>
   );
 }

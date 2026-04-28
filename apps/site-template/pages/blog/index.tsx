@@ -37,7 +37,7 @@ export default function BlogIndex({ site, posts, categories, socialLinks }: Blog
     <>
       <Head>
         <title>{`Blog — ${site.name}`}</title>
-        <meta name="description" content={`Confira os artigos do blog de ${site.name}.`} />
+        <meta name="description" content={`Check out the articles on ${site.name}'s blog.`} />
         <meta property="og:title" content={`Blog — ${site.name}`} />
         <meta property="og:type" content="website" />
       </Head>
@@ -46,16 +46,16 @@ export default function BlogIndex({ site, posts, categories, socialLinks }: Blog
         <section className="blog-hero">
           <div className="container">
             <h1>Blog</h1>
-            <p>Conteúdo prático para ajudar o seu negócio a crescer.</p>
+            <p>Practical content to help your business grow.</p>
           </div>
         </section>
 
         <div className="container">
           <div className="blog-layout">
-            <main className="blog-main" aria-label="Lista de artigos">
+            <main className="blog-main" aria-label="Article list">
               {filtered.length === 0 ? (
                 <div className="empty-state">
-                  <p>Nenhum artigo encontrado para &ldquo;{search}&rdquo;.</p>
+                  <p>No articles found for &ldquo;{search}&rdquo;.</p>
                 </div>
               ) : (
                 <>

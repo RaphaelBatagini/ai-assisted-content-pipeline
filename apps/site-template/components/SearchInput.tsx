@@ -7,16 +7,16 @@ export default function SearchInput({ value, onChange }: SearchInputProps) {
   return (
     <div className="search-input-wrapper">
       <label htmlFor="blog-search" className="sr-only">
-        Buscar artigos
+        Search articles
       </label>
       <input
         id="blog-search"
         type="search"
         className="search-input"
-        placeholder="Buscar artigos..."
+        placeholder="Search articles..."
         value={value}
         onChange={(e) => onChange(e.target.value)}
-        aria-label="Buscar artigos"
+        aria-label="Search articles"
       />
     </div>
   );

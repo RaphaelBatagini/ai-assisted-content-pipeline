@@ -94,3 +94,19 @@ api.interceptors.response.use(
 );
 
 export default api;
+
+// Content Strategy Brief
+export async function getContentStrategyBrief(siteId: string) {
+  const response = await api.get(`/api/sites/${siteId}/content-strategy-brief`);
+  return response.data;
+}
+
+export async function createContentStrategyBrief(siteId: string, data: Record<string, unknown>) {
+  const response = await api.post(`/api/sites/${siteId}/content-strategy-brief`, data);
+  return response.data;
+}
+
+export async function retryContentStrategyBrief(siteId: string) {
+  const response = await api.post(`/api/sites/${siteId}/content-strategy-brief/retry`);
+  return response.data;
+}

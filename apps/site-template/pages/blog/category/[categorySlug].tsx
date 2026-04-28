@@ -63,13 +63,13 @@ export default function BlogCategoryPage({
 
         <div className="container">
           <div className="blog-layout">
-            <main className="blog-main" aria-label="Lista de artigos">
+            <main className="blog-main" aria-label="Article list">
               {filtered.length === 0 ? (
                 <div className="empty-state">
                   <p>
                     {search
-                      ? `Nenhum artigo encontrado para \u201c${search}\u201d.`
-                      : 'Nenhum post nesta categoria ainda.'}
+                      ? `No articles found for \u201c${search}\u201d.`
+                      : 'No posts in this category yet.'}
                   </p>
                 </div>
               ) : (

@@ -22,7 +22,7 @@ export default function Home({ site, recentPosts, categories, socialLinks }: Hom
     <>
       <Head>
         <title>{site.name}</title>
-        <meta name="description" content={`${site.name} — conteúdo prático para o seu negócio crescer.`} />
+        <meta name="description" content={`${site.name} — practical content to help your business grow.`} />
         <meta property="og:title" content={site.name} />
         <meta property="og:type" content="website" />
       </Head>
@@ -35,15 +35,15 @@ export default function Home({ site, recentPosts, categories, socialLinks }: Hom
             <div className="home-hero-content">
               <h1 className="home-hero-title">{site.name}</h1>
               <p className="home-hero-subtitle">
-                Conteúdo prático e direto ao ponto para ajudar o seu negócio a crescer.
-                Estratégias, dicas e análises para empreendedores.
+                Practical, straight-to-the-point content to help your business grow.
+                Strategies, tips and insights for entrepreneurs.
               </p>
               <div className="home-hero-actions">
                 <Link href="/blog/" className="btn-primary">
-                  Ver todos os artigos
+                  View all articles
                 </Link>
-                <Link href="/contato/" className="btn-secondary">
-                  Falar com especialista
+                <Link href="/contact/" className="btn-secondary">
+                  Talk to a specialist
                 </Link>
               </div>
             </div>
@@ -55,9 +55,9 @@ export default function Home({ site, recentPosts, categories, socialLinks }: Hom
           <section className="home-section">
             <div className="container">
               <div className="home-section-header">
-                <h2 className="home-section-title">Últimos artigos</h2>
+                <h2 className="home-section-title">Latest articles</h2>
                 <Link href="/blog/" className="home-section-link">
-                  Ver todos →
+                  View all →
                 </Link>
               </div>
               <div className="home-posts-grid">
@@ -74,13 +74,13 @@ export default function Home({ site, recentPosts, categories, socialLinks }: Hom
           <div className="container">
             <div className="home-cta-strip-inner">
               <div>
-                <h2 className="home-cta-strip-title">Pronto para dar o próximo passo?</h2>
+                <h2 className="home-cta-strip-title">Ready to take the next step?</h2>
                 <p className="home-cta-strip-text">
-                  Converse com nossos especialistas e descubra como podemos transformar o seu negócio.
+                  Talk to our specialists and discover how we can transform your business.
                 </p>
               </div>
-              <Link href="/contato/" className="btn-primary home-cta-strip-btn">
-                Entrar em contato
+              <Link href="/contact/" className="btn-primary home-cta-strip-btn">
+                Get in touch
               </Link>
             </div>
           </div>

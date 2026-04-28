@@ -34,7 +34,7 @@ export default function Layout({ children, site, categories, socialLinks }: Layo
           <nav className="site-nav">
             <Link href="/">Home</Link>
             <Link href="/blog/">Blog</Link>
-            <Link href="/contato/">Contato</Link>
+            <Link href="/contact/">Contact</Link>
           </nav>
         </div>
       </header>
@@ -54,7 +54,7 @@ export default function Layout({ children, site, categories, socialLinks }: Layo
           )}
           {site.address && <p style={{ marginBottom: '0.5rem' }}>{site.address}</p>}
           <p>
-            &copy; {new Date().getFullYear()} {site.name}. Todos os direitos reservados.
+            &copy; {new Date().getFullYear()} {site.name}. All rights reserved.
           </p>
           {site.contactEmail && (
             <p style={{ marginTop: '0.4rem' }}>

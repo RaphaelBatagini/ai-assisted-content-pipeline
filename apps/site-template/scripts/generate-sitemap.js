@@ -27,7 +27,7 @@ function url(loc, lastmod, priority = '0.7') {
 
 const urls = [
   url('/', site.updatedAt || new Date().toISOString(), '1.0'),
-  url('/contato/', null, '0.5'),
+  url('/contact/', null, '0.5'),
   ...categories.map((cat) => url(`/${cat.slug}/`, null, '0.6')),
   ...published.map((post) => url(`/post/${post.slug}/`, post.publishedAt || post.updatedAt, '0.8')),
 ];

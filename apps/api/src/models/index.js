@@ -7,6 +7,7 @@ const Category = require('./Category');
 const Post = require('./Post');
 const PostCategory = require('./PostCategory');
 const ContactMessage = require('./ContactMessage');
+const ContentStrategyBrief = require('./ContentStrategyBrief');
 
 // Associations
 User.hasMany(Site, { foreignKey: 'userId', onDelete: 'CASCADE' });
@@ -30,6 +31,9 @@ Category.belongsToMany(Post, { through: PostCategory, foreignKey: 'categoryId' }
 Site.hasMany(ContactMessage, { foreignKey: 'siteId', onDelete: 'CASCADE' });
 ContactMessage.belongsTo(Site, { foreignKey: 'siteId' });
 
+Site.hasOne(ContentStrategyBrief, { foreignKey: 'siteId', onDelete: 'CASCADE' });
+ContentStrategyBrief.belongsTo(Site, { foreignKey: 'siteId' });
+
 module.exports = {
   sequelize,
   User,
@@ -39,4 +43,5 @@ module.exports = {
   Post,
   PostCategory,
   ContactMessage,
+  ContentStrategyBrief,
 };
