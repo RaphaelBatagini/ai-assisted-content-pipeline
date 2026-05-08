@@ -130,6 +130,13 @@ cd apps/api && npm run worker:dev
 | `SITE_TEMPLATE_DIR`         | Absolute path to the `apps/site-template` directory | auto-detected |
 | `BUILDS_BASE_DIR`           | Temp directory for build artifacts              | `/tmp/builds`        |
 | `BUILD_CONCURRENCY`         | Number of parallel site builds the worker runs  | `1`                  |
+| `ENCRYPTION_KEY`            | 32-byte key as 64 hex chars — encrypts OAuth tokens at rest | *(required)*  |
+| `GOOGLE_CLIENT_ID`          | Google OAuth 2.0 client ID                      | *(required)*         |
+| `GOOGLE_CLIENT_SECRET`      | Google OAuth 2.0 client secret                  | *(required)*         |
+| `GOOGLE_OAUTH_REDIRECT_URI` | OAuth callback URL, e.g. `https://api.example.com/api/auth/google/callback` | *(required)* |
+| `BACKOFFICE_URL`            | Backoffice base URL (used for OAuth redirect after connect) | *(required)* |
+| `SITE_BASE_DOMAIN`          | Root domain of tenant sites, e.g. `example.com` — used for GA4 stream URI | *(required in prod)* |
+| `GOOGLE_PROVISIONING_CONCURRENCY` | Parallel Google provisioning jobs the worker runs | `2`           |
 
 ### `apps/backoffice/.env.local`
 
@@ -144,6 +151,109 @@ cd apps/api && npm run worker:dev
 |-----------------------------|-------------------------------|-----------------------------|
 | `NEXT_PUBLIC_API_URL`       | API base URL                  | `http://localhost:3001`     |
 | `NEXT_PUBLIC_BACKOFFICE_URL`| Backoffice URL                | `http://localhost:3000`     |
+
+---
+
+## Google Analytics & Tag Manager Setup
+
+The platform provisions Google Analytics 4 and Google Tag Manager automatically via OAuth — no manual ID entry required.
+
+### 1. Create a Google Cloud project and OAuth credentials
+
+1. Go to [console.cloud.google.com](https://console.cloud.google.com) and create (or select) a project.
+2. Navigate to **APIs & Services → Library** and enable all three APIs:
+   - **Google Analytics Admin API**
+   - **Google Analytics Data API**
+   - **Tag Manager API**
+3. Go to **APIs & Services → OAuth consent screen**:
+   - Choose **External** user type.
+   - Fill in app name, support email, and developer contact.
+   - Add the following OAuth scopes:
+     - `https://www.googleapis.com/auth/analytics.edit`
+     - `https://www.googleapis.com/auth/analytics.readonly`
+     - `https://www.googleapis.com/auth/tagmanager.edit.containers`
+     - `https://www.googleapis.com/auth/tagmanager.manage.accounts`
+     - `https://www.googleapis.com/auth/tagmanager.readonly`
+     - `openid`, `email`, `profile`
+   - Add your own Google account as a test user while the app is in testing mode.
+4. Go to **APIs & Services → Credentials → Create Credentials → OAuth client ID**:
+   - Application type: **Web application**.
+   - Add your callback URL under **Authorized redirect URIs**:
+     - Development: `http://localhost:3001/api/auth/google/callback`
+     - Production: `https://api.example.com/api/auth/google/callback`
+5. Copy the **Client ID** and **Client Secret** into `GOOGLE_CLIENT_ID` and `GOOGLE_CLIENT_SECRET`.
+
+### 2. Generate an encryption key
+
+OAuth tokens are encrypted at rest with AES-256-GCM. Generate a 32-byte key encoded as 64 hex characters:
+
+```bash
+openssl rand -hex 32
+```
+
+Set the output as `ENCRYPTION_KEY` in your `.env`.
+
+### 3. Configure environment variables
+
+```env
+ENCRYPTION_KEY=<64 hex chars from step 2>
+GOOGLE_CLIENT_ID=<from GCP credentials>
+GOOGLE_CLIENT_SECRET=<from GCP credentials>
+GOOGLE_OAUTH_REDIRECT_URI=https://api.example.com/api/auth/google/callback
+BACKOFFICE_URL=https://backoffice.example.com
+SITE_BASE_DOMAIN=example.com
+GOOGLE_PROVISIONING_CONCURRENCY=2
+```
+
+### 4. Start the Google provisioning worker
+
+The worker processes GA4 + GTM provisioning jobs from the Bull queue asynchronously.
+
+**Development:**
+
+```bash
+cd apps/api && npm run worker:google:dev
+```
+
+**Production (Docker):** the `google-worker` service in `docker-compose.yml` starts automatically with `docker compose up`.
+
+### 5. How it works end-to-end
+
+```
+User clicks "Connect with Google" in Site Settings
+        │
+        ▼
+Backoffice calls GET /api/auth/google/connect?siteId=<id>
+  → API generates a signed state JWT + single-use nonce (Redis, 10 min TTL)
+  → Returns Google OAuth authorization URL
+        │
+        ▼
+User completes Google OAuth consent screen
+        │
+        ▼
+Google redirects to /api/auth/google/callback?code=...&state=...
+  → API verifies state JWT + consumes nonce (CSRF protection)
+  → Exchanges code for access + refresh tokens
+  → Tokens encrypted (AES-256-GCM) and stored in google_oauth_tokens table
+  → Site status set to "pending", provisioning job enqueued
+        │
+        ▼
+google-worker picks up job
+  1. Creates (or reuses) GA4 property matching the site name
+  2. Creates (or reuses) a Web Data Stream for the site domain
+  3. Creates (or reuses) GTM container matching the site name
+  4. Creates an All Pages PAGEVIEW trigger + GA4 Configuration tag inside GTM
+  5. Publishes the GTM workspace
+  6. Saves all IDs to the site record (gaPropertyId, gaTrackingId, gtmContainerId, etc.)
+  7. Triggers a site rebuild so the new GTM snippet is injected into the static site
+        │
+        ▼
+Backoffice polls GET /api/auth/google/status?siteId=<id> every 3 s
+  → Displays real-time provisioning progress
+  → Shows connected email, GA4 property ID, GTM container ID on completion
+```
+
+Provisioning is **idempotent**: re-running it (via the Retry button) will reuse any resources already created in Google instead of creating duplicates. Jobs are retried up to **3 times** with exponential back-off on failure.
 
 ---
 

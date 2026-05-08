@@ -53,12 +53,12 @@ export default function NewSitePage() {
     try {
       await api.post("/api/sites", data);
       await queryClient.invalidateQueries({ queryKey: ["sites"] });
-      toast.success("Site created!");
+      toast.success("Website created!");
       router.push("/dashboard");
     } catch (err: unknown) {
       const msg =
         (err as { response?: { data?: { error?: string } } })?.response?.data?.error ??
-        "Failed to create site";
+        "Failed to create website";
       toast.error(msg);
     }
   }
@@ -66,8 +66,8 @@ export default function NewSitePage() {
   return (
     <div className="max-w-2xl space-y-6">
       <div>
-        <h1 className="text-2xl font-bold">New site</h1>
-        <p className="text-muted-foreground">Set up a new blog site.</p>
+        <h1 className="text-2xl font-bold">New website</h1>
+        <p className="text-muted-foreground">Set up a new blog website.</p>
       </div>
 
       <Form {...form}>
@@ -82,7 +82,7 @@ export default function NewSitePage() {
                 name="name"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Site name</FormLabel>
+                    <FormLabel>Website name</FormLabel>
                     <FormControl>
                       <Input placeholder="My Awesome Blog" {...field} />
                     </FormControl>
@@ -205,7 +205,7 @@ export default function NewSitePage() {
 
           <div className="flex gap-3">
             <Button type="submit" disabled={form.formState.isSubmitting}>
-              {form.formState.isSubmitting ? "Creating…" : "Create site"}
+              {form.formState.isSubmitting ? "Creating…" : "Create website"}
             </Button>
             <Button type="button" variant="outline" onClick={() => router.back()}>
               Cancel

@@ -79,6 +79,7 @@ export default function BlogIndex({ site, posts, categories, socialLinks }: Blog
               featuredPosts={featuredSidebar}
               searchValue={search}
               onSearch={setSearch}
+              siteId={site.id}
             />
           </div>
         </div>

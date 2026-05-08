@@ -355,23 +355,23 @@ Pipeline GitHub Actions:
 - [x] Testes end-to-end do fluxo publicação → site ao vivo
 
 ### Fase 6 — Agentes de IA
-- [ ] **Infraestrutura base dos agentes**: setup de SDK (LangChain ou similar), gerenciamento de contexto de marca (tom de voz, palavras-chave) por site
-- [ ] **Agente Roadmap de Conteúdo**: pesquisa tópicos em alta (via Google Trends API ou similar), cruza com categorias do site e gera lista priorizada de temas para o próximo ciclo
-- [ ] Endpoint `POST /api/sites/:siteId/ai/roadmap` — aciona o agente e retorna lista de temas sugeridos
-- [ ] Tela no backoffice para visualizar e aprovar temas do roadmap, adicionando-os à fila de produção
-- [ ] **Agente de Redação**: dado um tema aprovado, realiza pesquisa aprofundada, redige o rascunho do post com citação de fontes, e incorpora dados de performance dos posts anteriores para ajustar abordagem e manter tom de voz da marca
-- [ ] Endpoint `POST /api/sites/:siteId/ai/draft` — recebe tema + contexto de marca e retorna rascunho em HTML/Markdown
-- [ ] Integração do rascunho gerado diretamente no editor TipTap do backoffice para revisão humana
+- [x] **Infraestrutura base dos agentes**: setup de SDK (LangChain ou similar), gerenciamento de contexto de marca (tom de voz, palavras-chave) por site
+- [x] **Agente Roadmap de Conteúdo**: pesquisa tópicos em alta (via Google Trends API ou similar), cruza com categorias do site e gera lista priorizada de temas para o próximo ciclo
+- [x] Endpoint `POST /api/sites/:siteId/ai/roadmap` — aciona o agente e retorna lista de temas sugeridos
+- [x] Tela no backoffice para visualizar e aprovar temas do roadmap, adicionando-os à fila de produção
+- [x] **Agente de Redação**: dado um tema aprovado, realiza pesquisa aprofundada, redige o rascunho do post com citação de fontes, e incorpora dados de performance dos posts anteriores para ajustar abordagem e manter tom de voz da marca
+- [x] Endpoint `POST /api/sites/:siteId/ai/draft` — recebe tema + contexto de marca e retorna rascunho em HTML/Markdown
+- [x] Integração do rascunho gerado diretamente no editor TipTap do backoffice para revisão humana
 - [ ] **Agente de Revisão de SEO**: analisa o rascunho final, sugere ajustes de título, meta description, densidade de palavras-chave, estrutura de headings e links internos
 - [ ] Endpoint `POST /api/sites/:siteId/ai/seo-review` — recebe conteúdo do post e retorna lista de sugestões estruturadas
 - [ ] Painel de revisão de SEO no editor de post com checklist interativo das sugestões do agente
 
 ### Fase 7 — Tracking e Analytics
-- [ ] Tracking de cliques em botões de conversão (CTA "entrar em contato") nos sites estáticos via eventos GA/GTM
-- [ ] Endpoint na API para receber e armazenar eventos de clique vindos do site-template (`POST /api/analytics/events`)
-- [ ] Integração com a API do Google Analytics (Data API) para coletar métricas de performance por post (pageviews, tempo médio, taxa de rejeição)
-- [ ] Armazenamento das métricas coletadas por post na tabela `post_analytics` (snapshot periódico via worker)
-- [ ] Tela no backoffice com painel de performance dos posts (visualizações, engajamento, conversões)
+- [x] Tracking de cliques em botões de conversão (CTA "entrar em contato") nos sites estáticos via eventos GA/GTM
+- [x] Endpoint na API para receber e armazenar eventos de clique vindos do site-template (`POST /api/analytics/events`)
+- [x] Integração com a API do Google Analytics (Data API) para coletar métricas de performance por post (pageviews, tempo médio, taxa de rejeição)
+- [x] Armazenamento das métricas coletadas por post na tabela `post_analytics` (snapshot periódico via worker)
+- [x] Tela no backoffice com painel de performance dos posts (visualizações, engajamento, conversões)
 
 ### Fase 8 — Agenda de Publicações
 - [ ] Adicionar campo `scheduled_at` (timestamptz nullable) na tabela `posts`

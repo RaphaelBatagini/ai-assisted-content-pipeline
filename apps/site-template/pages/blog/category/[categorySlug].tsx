@@ -95,6 +95,7 @@ export default function BlogCategoryPage({
               activeCategory={category.slug}
               searchValue={search}
               onSearch={setSearch}
+              siteId={site.id}
             />
           </div>
         </div>

@@ -14,13 +14,14 @@ import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
+import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage, FormDescription } from "@/components/ui/form";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { ColorPaletteSelect } from "@/components/ColorPaletteSelect";
 import { SlugInput } from "@/components/SlugInput";
 import { ImageUpload } from "@/components/ImageUpload";
 import { ConfirmDialog } from "@/components/ConfirmDialog";
 import { Plus, Trash2 } from "lucide-react";
+import { GoogleConnectCard } from "@/components/GoogleConnectCard";
 
 const SOCIAL_PLATFORMS = [
   { value: "twitter", label: "Twitter / X" },
@@ -42,8 +43,6 @@ const siteSchema = z.object({
   faviconUrl: z.string().optional().default(""),
   whatsapp: z.string().optional().default(""),
   address: z.string().optional().default(""),
-  gaTrackingId: z.string().optional().default(""),
-  gtmContainerId: z.string().optional().default(""),
   fbPixelId: z.string().optional().default(""),
   customHeadScripts: z.string().optional().default(""),
 });
@@ -66,8 +65,6 @@ interface SiteData {
   faviconUrl?: string;
   whatsapp?: string;
   address?: string;
-  gaTrackingId?: string;
-  gtmContainerId?: string;
   fbPixelId?: string;
   customHeadScripts?: string;
 }
@@ -171,8 +168,6 @@ export default function SiteSettingsPage() {
       faviconUrl: "",
       whatsapp: "",
       address: "",
-      gaTrackingId: "",
-      gtmContainerId: "",
       fbPixelId: "",
       customHeadScripts: "",
     },
@@ -189,8 +184,6 @@ export default function SiteSettingsPage() {
         faviconUrl: site.faviconUrl ?? "",
         whatsapp: site.whatsapp ?? "",
         address: site.address ?? "",
-        gaTrackingId: site.gaTrackingId ?? "",
-        gtmContainerId: site.gtmContainerId ?? "",
         fbPixelId: site.fbPixelId ?? "",
         customHeadScripts: site.customHeadScripts ?? "",
       });
@@ -212,7 +205,7 @@ export default function SiteSettingsPage() {
   return (
     <div className="max-w-2xl space-y-6">
       <div>
-        <h1 className="text-2xl font-bold">Site settings</h1>
+        <h1 className="text-2xl font-bold">Website settings</h1>
         {site && <p className="text-muted-foreground">{site.name}</p>}
       </div>
 
@@ -234,7 +227,7 @@ export default function SiteSettingsPage() {
                     name="name"
                     render={({ field }) => (
                       <FormItem>
-                        <FormLabel>Site name</FormLabel>
+                        <FormLabel>Website name</FormLabel>
                         <FormControl>
                           <Input {...field} />
                         </FormControl>
@@ -347,32 +340,7 @@ export default function SiteSettingsPage() {
             <TabsContent value="seo" className="mt-4">
               <Card>
                 <CardContent className="pt-6 space-y-4">
-                  <FormField
-                    control={form.control}
-                    name="gaTrackingId"
-                    render={({ field }) => (
-                      <FormItem>
-                        <FormLabel>Google Analytics ID</FormLabel>
-                        <FormControl>
-                          <Input placeholder="G-XXXXXXXXXX" {...field} />
-                        </FormControl>
-                        <FormMessage />
-                      </FormItem>
-                    )}
-                  />
-                  <FormField
-                    control={form.control}
-                    name="gtmContainerId"
-                    render={({ field }) => (
-                      <FormItem>
-                        <FormLabel>Google Tag Manager ID</FormLabel>
-                        <FormControl>
-                          <Input placeholder="GTM-XXXXXXX" {...field} />
-                        </FormControl>
-                        <FormMessage />
-                      </FormItem>
-                    )}
-                  />
+                  <GoogleConnectCard />
                   <FormField
                     control={form.control}
                     name="fbPixelId"

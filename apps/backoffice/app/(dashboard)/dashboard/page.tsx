@@ -81,13 +81,13 @@ export default function DashboardPage() {
     <div className="space-y-6">
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-2xl font-bold">My Sites</h1>
-          <p className="text-muted-foreground">Manage all your blog sites from here.</p>
+          <h1 className="text-2xl font-bold">My Websites</h1>
+          <p className="text-muted-foreground">Manage all your blog websites from here.</p>
         </div>
         <Button asChild>
           <Link href="/sites/new">
             <Plus className="w-4 h-4 mr-2" />
-            New site
+            New website
           </Link>
         </Button>
       </div>
@@ -101,12 +101,12 @@ export default function DashboardPage() {
       ) : sites.length === 0 ? (
         <div className="flex flex-col items-center justify-center rounded-lg border border-dashed p-12 text-center">
           <Globe className="w-12 h-12 text-muted-foreground mb-4" />
-          <h2 className="text-lg font-medium">No sites yet</h2>
-          <p className="text-muted-foreground mb-4">Create your first blog site to get started.</p>
+          <h2 className="text-lg font-medium">No websites yet</h2>
+          <p className="text-muted-foreground mb-4">Create your first blog website to get started.</p>
           <Button asChild>
             <Link href="/sites/new">
               <Plus className="w-4 h-4 mr-2" />
-              New site
+              New website
             </Link>
           </Button>
         </div>

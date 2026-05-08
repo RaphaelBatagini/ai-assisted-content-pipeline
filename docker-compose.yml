@@ -61,6 +61,31 @@ services:
     volumes:
       - build_tmp:/tmp/builds
 
+  google-worker:
+    build:
+      context: .
+      dockerfile: apps/api/Dockerfile.googleWorker
+    container_name: blogs_tool_google_worker
+    restart: unless-stopped
+    depends_on:
+      - postgres
+      - redis
+    environment:
+      - NODE_ENV=production
+      - DATABASE_URL=${DATABASE_URL:-postgres://postgres:postgres@postgres:5432/blogs_tool}
+      - DB_HOST=postgres
+      - DB_PORT=5432
+      - DB_NAME=${DB_NAME:-blogs_tool}
+      - DB_USER=${DB_USER:-postgres}
+      - DB_PASSWORD=${DB_PASSWORD:-postgres}
+      - REDIS_URL=redis://redis:6379
+      - ENCRYPTION_KEY=${ENCRYPTION_KEY}
+      - GOOGLE_CLIENT_ID=${GOOGLE_CLIENT_ID}
+      - GOOGLE_CLIENT_SECRET=${GOOGLE_CLIENT_SECRET}
+      - GOOGLE_OAUTH_REDIRECT_URI=${GOOGLE_OAUTH_REDIRECT_URI}
+      - SITE_BASE_DOMAIN=${SITE_BASE_DOMAIN}
+      - GOOGLE_PROVISIONING_CONCURRENCY=${GOOGLE_PROVISIONING_CONCURRENCY:-2}
+
 volumes:
   postgres_data:
   build_tmp:

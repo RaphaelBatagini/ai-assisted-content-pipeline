@@ -18,6 +18,8 @@ const uploadRouter = require('./routes/upload');
 const contactRouter = require('./routes/contact');
 const paymentRouter = require('./routes/payment');
 const contentStrategyBriefRouter = require('./routes/contentStrategyBrief');
+const { analyticsRouter, siteAnalyticsRouter } = require('./routes/analytics');
+const googleAuthRouter = require('./routes/googleAuth');
 
 const auth = require('./middlewares/auth');
 const ownership = require('./middlewares/ownership');
@@ -88,6 +90,14 @@ app.use(
   ownership,
   contentStrategyBriefRouter,
 );
+
+// Analytics — public events endpoint (fire-and-forget, open CORS)
+app.use('/api/analytics', analyticsRouter);
+// Analytics — authenticated site-specific endpoints
+app.use('/api/sites/:siteId/analytics', auth, siteAnalyticsRouter);
+
+// Google OAuth & provisioning
+app.use('/api/auth/google', googleAuthRouter);
 
 // Global error handler
 app.use((err, req, res, next) => {

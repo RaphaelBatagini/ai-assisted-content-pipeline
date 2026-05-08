@@ -20,6 +20,7 @@ import {
   ChevronDown,
   ChevronUp,
   Sparkles,
+  BarChart2,
 } from "lucide-react";
 import React from "react";
 
@@ -64,7 +65,7 @@ function GlobalBriefAlert() {
       <span className="flex-1">
         {missingSites.length === 1
           ? <><strong>{missingSites[0].name}</strong> is missing a Content Strategy Brief.</>
-          : <><strong>{missingSites.length} of your sites</strong> are missing a Content Strategy Brief.</>
+          : <><strong>{missingSites.length} of your websites</strong> are missing a Content Strategy Brief.</>
         }
         {" "}Let AI generate a content roadmap and draft posts automatically.
       </span>
@@ -80,7 +81,7 @@ function GlobalBriefAlert() {
           href="/dashboard"
           className="shrink-0 rounded-md bg-amber-600 px-3 py-1 text-xs font-semibold text-white hover:bg-amber-700 whitespace-nowrap"
         >
-          View sites
+          View websites
         </Link>
       )}
     </div>
@@ -121,6 +122,9 @@ function SiteNavItem({ site }: { site: Site }) {
           </NavLink>
           <NavLink href={`${baseHref}/content-strategy-brief`} icon={<Sparkles className="w-3 h-3" />}>
             Content Strategy Brief
+          </NavLink>
+          <NavLink href={`${baseHref}/analytics`} icon={<BarChart2 className="w-3 h-3" />}>
+            Analytics
           </NavLink>
         </div>
       )}
@@ -172,7 +176,7 @@ function Sidebar() {
         </NavLink>
         <Separator className="my-2" />
         <p className="px-3 text-xs font-semibold text-muted-foreground uppercase tracking-wider">
-          Sites
+          Websites
         </p>
         {sites.map((site) => (
           <SiteNavItem key={site.id} site={site} />
@@ -182,7 +186,7 @@ function Sidebar() {
           className="flex items-center gap-2 rounded-md px-3 py-1.5 text-sm text-muted-foreground hover:bg-accent hover:text-foreground"
         >
           <PlusCircle className="w-4 h-4" />
-          New site
+          New website
         </Link>
       </nav>
       <div className="p-3 border-t">

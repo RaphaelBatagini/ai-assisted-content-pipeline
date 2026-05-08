@@ -10,6 +10,7 @@ interface SidebarProps {
   activeCategory?: string;
   searchValue: string;
   onSearch: (value: string) => void;
+  siteId?: string;
 }
 
 export default function Sidebar({
@@ -18,6 +19,7 @@ export default function Sidebar({
   activeCategory,
   searchValue,
   onSearch,
+  siteId,
 }: SidebarProps) {
   return (
     <aside className="blog-sidebar" aria-label="Sidebar">
@@ -38,7 +40,7 @@ export default function Sidebar({
         </div>
       )}
 
-      <CTABanner />
+      <CTABanner siteId={siteId} />
     </aside>
   );
 }

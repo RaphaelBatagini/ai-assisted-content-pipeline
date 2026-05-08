@@ -20,7 +20,7 @@ export function ContentBriefBanner({ siteId, brief }: ContentBriefBannerProps) {
     return (
       <div className="flex items-center gap-3 rounded-lg border border-yellow-300 bg-yellow-50 px-4 py-3 mb-4 text-sm text-yellow-800">
         <span className="flex-1">
-          <strong>Missing Content Strategy Brief.</strong> Your site needs a Content Strategy Brief to fuel
+          <strong>Missing Content Strategy Brief.</strong> Your website needs a Content Strategy Brief to fuel
           your growth engine.
         </span>
         <Link

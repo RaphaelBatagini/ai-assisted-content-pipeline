@@ -1,5 +1,7 @@
 # Plan: Content Strategy Brief Feature
 
+> **Status: COMPLETED** — All 21 steps implemented. Additional improvements beyond original scope: error sanitization, retry endpoint, page-reload state persistence, idempotent upsert form, two-column layout with roadmap viewer, global dashboard alert, site card badges.
+
 ## TL;DR
 Add a "Content Strategy Brief" feature that warns users when a site lacks one, guides them through a 4-step wizard to collect business context, then uses AI (Gemini) to asynchronously research relevant topics (researcher agent) and write X draft posts (writer agent). The frontend polls for status updates while jobs run in a Bull queue.
 
@@ -20,18 +22,18 @@ Add a "Content Strategy Brief" feature that warns users when a site lacks one, g
 
 ## Phase 1 — Backend: Database & Models
 
-### Step 1 — Migration: `008-create-content-strategy-briefs.js`
+### ✅ Step 1 — Migration: `008-create-content-strategy-briefs.js`
 File: `apps/api/migrations/008-create-content-strategy-briefs.js`
 - Table: `content_strategy_briefs`
 - Columns: id (UUID PK), site_id (UUID FK→sites UNIQUE CASCADE), company_name (STRING NOT NULL), product_description (TEXT NOT NULL), industry (STRING NOT NULL), target_audience (TEXT NOT NULL), pain_points (TEXT NOT NULL), differentiators (TEXT), competitors (TEXT), conversion_goal (STRING), content_goals (TEXT, comma-separated), content_formats (TEXT, comma-separated), tone_of_voice (ENUM: 'professional','casual','technical','conversational' DEFAULT 'professional'), status (ENUM: 'pending','researching','writing','ready','error' DEFAULT 'pending'), error_message (TEXT NULL), roadmap_json (TEXT NULL), posts_generated (INTEGER DEFAULT 0), created_at, updated_at
 - UNIQUE constraint on site_id
 
-### Step 2 — Model: `ContentStrategyBrief.js`
+### ✅ Step 2 — Model: `ContentStrategyBrief.js`
 File: `apps/api/src/models/ContentStrategyBrief.js`
 - Follow existing model patterns (UUID PK, DataTypes matching migration)
 - Export from `src/models/index.js`
 
-### Step 3 — Model Associations
+### ✅ Step 3 — Model Associations
 File: `apps/api/src/models/index.js`
 - `Site.hasOne(ContentStrategyBrief, { foreignKey: 'siteId' })`
 - `ContentStrategyBrief.belongsTo(Site, { foreignKey: 'siteId' })`
@@ -40,12 +42,12 @@ File: `apps/api/src/models/index.js`
 
 ## Phase 2 — Backend: AI Service Abstraction
 
-### Step 4 — AI Provider Interface
+### ✅ Step 4 — AI Provider Interface
 File: `apps/api/src/services/ai/AIProvider.js`
 - Class `AIProvider` with abstract method `generate(systemPrompt, userPrompt, options = {})`
 - Throws error if not implemented
 
-### Step 5 — Gemini Provider
+### ✅ Step 5 — Gemini Provider
 File: `apps/api/src/services/ai/GeminiProvider.js`
 - Class `GeminiProvider extends AIProvider`
 - Uses `@google/generative-ai` package
@@ -53,13 +55,13 @@ File: `apps/api/src/services/ai/GeminiProvider.js`
 - API key from `process.env.GEMINI_API_KEY`
 - Returns plain text string from `generateContent()`
 
-### Step 6 — AI Factory
+### ✅ Step 6 — AI Factory
 File: `apps/api/src/services/ai/index.js`
 - `createAIProvider()` factory function
 - Reads `process.env.AI_PROVIDER` (defaults to `'gemini'`)
 - Returns correct provider instance (throws for unknown providers)
 
-### Step 7 — Add Gemini Package
+### ✅ Step 7 — Add Gemini Package
 File: `apps/api/package.json`
 - Add `@google/generative-ai` to dependencies
 
@@ -67,7 +69,7 @@ File: `apps/api/package.json`
 
 ## Phase 3 — Backend: Prompts
 
-### Step 8 — Researcher Prompt
+### ✅ Step 8 — Researcher Prompt
 File: `apps/api/src/prompts/researcher.js`
 - Export `buildResearcherPrompt(brief)` that returns `{ systemPrompt, userPrompt }`
 - System prompt: establishes role as expert B2B SaaS content strategist targeting en-US
@@ -75,7 +77,7 @@ File: `apps/api/src/prompts/researcher.js`
 - Instructs AI to return valid JSON array of content topics with fields: title, angle, targetKeyword, contentFormat, priority, outline (array of H2s)
 - Request more topics than POSTS_TO_GENERATE (request 15 to always have enough)
 
-### Step 9 — Writer Prompt
+### ✅ Step 9 — Writer Prompt
 File: `apps/api/src/prompts/writer.js`
 - Export `buildWriterPrompt(topic, brief, siteName)` that returns `{ systemPrompt, userPrompt }`
 - System prompt: role as expert B2B SaaS content writer, en-US, tone from brief
@@ -86,14 +88,14 @@ File: `apps/api/src/prompts/writer.js`
 
 ## Phase 4 — Backend: AI Queue & Worker
 
-### Step 10 — AI Queue Service
+### ✅ Step 10 — AI Queue Service
 File: `apps/api/src/services/aiQueue.js`
 - Follow pattern of `buildQueue.js` (Bull queue, Redis)
 - Queue name: `ai-jobs`
 - Export: `aiQueue`, `enqueueResearch(briefId, siteId)`
 - `enqueueResearch` adds job type `{ type: 'research', briefId, siteId }` with 3 retries, exponential backoff
 
-### Step 11 — AI Worker
+### ✅ Step 11 — AI Worker
 File: `apps/api/src/workers/aiWorker.js`
 - Standalone script (like `buildWorker.js`): `require('dotenv').config()`, load models
 - Processes `ai-jobs` queue
@@ -117,7 +119,7 @@ File: `apps/api/src/workers/aiWorker.js`
 - **Error handling:** On any failure, update brief status → `'error'`, save `error_message`
 - Concurrency: configurable via `AI_JOB_CONCURRENCY` env (default 2)
 
-### Step 12 — Worker Script in package.json
+### ✅ Step 12 — Worker Script in package.json
 File: `apps/api/package.json`
 - Add script: `"worker:ai": "node src/workers/aiWorker.js"`
 - Add script: `"worker:ai:dev": "nodemon src/workers/aiWorker.js"`
@@ -126,21 +128,21 @@ File: `apps/api/package.json`
 
 ## Phase 5 — Backend: Routes & Validators
 
-### Step 13 — Validator
+### ✅ Step 13 — Validator
 File: `apps/api/src/validators/contentStrategyBrief.js`
 - Joi schema: company_name (required, 1-200), product_description (required), industry (required, 1-100), target_audience (required), pain_points (required), differentiators (optional), competitors (optional), conversion_goal (optional), content_goals (optional), content_formats (optional), tone_of_voice (optional, enum)
 
-### Step 14 — Route File
+### ✅ Step 14 — Route File
 File: `apps/api/src/routes/contentStrategyBrief.js`
 - `GET /` → fetch brief for siteId (include status, roadmap_json summary); returns 404 if none
 - `POST /` → validate, check no existing brief for site (return 409 if exists), create brief, call `enqueueResearch(brief.id, siteId)`, return 201 with brief
 - Both protected by `auth, ownership` (ownership already sets `req.site`)
 
-### Step 15 — Register Routes in app.js
+### ✅ Step 15 — Register Routes in app.js
 File: `apps/api/src/app.js`
 - Add: `app.use('/api/sites/:siteId/content-strategy-brief', auth, ownership, contentStrategyBriefRouter)`
 
-### Step 16 — New env vars in .env
+### ✅ Step 16 — New env vars in .env
 File: `apps/api/.env`
 - `POSTS_TO_GENERATE=5`
 - `AI_PROVIDER=gemini`
@@ -150,7 +152,7 @@ File: `apps/api/.env`
 
 ## Phase 6 — Frontend: API Layer
 
-### Step 17 — API Functions
+### ✅ Step 17 — API Functions
 File: `apps/backoffice/lib/api.ts`
 - `getContentStrategyBrief(siteId)` → GET `/api/sites/${siteId}/content-strategy-brief`
 - `createContentStrategyBrief(siteId, data)` → POST `/api/sites/${siteId}/content-strategy-brief`
@@ -159,13 +161,13 @@ File: `apps/backoffice/lib/api.ts`
 
 ## Phase 7 — Frontend: Components & Pages
 
-### Step 18 — Site-Level Layout
+### ✅ Step 18 — Site-Level Layout
 File: `apps/backoffice/app/(dashboard)/sites/[siteId]/layout.tsx` (NEW)
 - Client component that reads `siteId` from `useParams()`
 - Fetches brief via `getContentStrategyBrief(siteId)` using React Query
 - Renders `<ContentBriefBanner siteId={siteId} brief={brief} />` above `{children}`
 
-### Step 19 — ContentBriefBanner Component
+### ✅ Step 19 — ContentBriefBanner Component
 File: `apps/backoffice/components/ContentBriefBanner.tsx`
 - Props: `{ siteId: string, brief: Brief | null }`
 - Render logic:
@@ -176,7 +178,7 @@ File: `apps/backoffice/components/ContentBriefBanner.tsx`
   - `brief.status === 'ready'`: hidden (no banner)
 - Uses `Alert` component pattern (can use existing `ui/` or simple Tailwind div)
 
-### Step 20 — Content Strategy Brief Page
+### ✅ Step 20 — Content Strategy Brief Page
 File: `apps/backoffice/app/(dashboard)/sites/[siteId]/content-strategy-brief/page.tsx`
 - 4-step wizard using React state (`currentStep: 1-4`)
 - Each step rendered conditionally; Back/Next/Submit buttons
@@ -190,7 +192,7 @@ File: `apps/backoffice/app/(dashboard)/sites/[siteId]/content-strategy-brief/pag
 - When `status === 'ready'`: shows success view with "X posts have been drafted" + link to `/sites/[siteId]/posts`
 - When `status === 'error'`: shows error message
 
-### Step 21 — Update Sidebar Nav
+### ✅ Step 21 — Update Sidebar Nav
 File: `apps/backoffice/app/(dashboard)/layout.tsx`
 - In `SiteNavItem`, add nav link: `Content Strategy Brief` → `/sites/${site.id}/content-strategy-brief`
 - Use icon: `Sparkles` from lucide-react

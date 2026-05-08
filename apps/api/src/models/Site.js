@@ -69,6 +69,31 @@ const Site = sequelize.define('Site', {
     type: DataTypes.TEXT,
     allowNull: true,
   },
+  gaPropertyId: {
+    type: DataTypes.STRING,
+    allowNull: true,
+  },
+  gaStreamId: {
+    type: DataTypes.STRING,
+    allowNull: true,
+  },
+  gtmNumericContainerId: {
+    type: DataTypes.STRING,
+    allowNull: true,
+  },
+  gtmWorkspaceId: {
+    type: DataTypes.STRING,
+    allowNull: true,
+  },
+  googleProvisioningStatus: {
+    type: DataTypes.ENUM('idle', 'pending', 'provisioning', 'ready', 'error'),
+    allowNull: false,
+    defaultValue: 'idle',
+  },
+  googleProvisioningError: {
+    type: DataTypes.TEXT,
+    allowNull: true,
+  },
 });
 
 module.exports = Site;

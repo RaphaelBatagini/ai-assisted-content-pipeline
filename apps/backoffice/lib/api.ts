@@ -110,3 +110,103 @@ export async function retryContentStrategyBrief(siteId: string) {
   const response = await api.post(`/api/sites/${siteId}/content-strategy-brief/retry`);
   return response.data;
 }
+
+// Google OAuth & Provisioning
+
+export interface GoogleConnectionStatus {
+  connected: boolean;
+  googleEmail: string | null;
+  provisioningStatus: 'idle' | 'pending' | 'provisioning' | 'ready' | 'error';
+  provisioningError: string | null;
+  gaTrackingId: string | null;
+  gaPropertyId: string | null;
+  gtmContainerId: string | null;
+}
+
+export async function getGoogleConnectionStatus(siteId: string): Promise<GoogleConnectionStatus> {
+  const response = await api.get('/api/auth/google/status', { params: { siteId } });
+  return response.data;
+}
+
+export async function initiateGoogleConnect(siteId: string): Promise<string> {
+  const response = await api.get('/api/auth/google/connect', { params: { siteId } });
+  return response.data.url as string;
+}
+
+export async function disconnectGoogle(siteId: string): Promise<void> {
+  await api.delete('/api/auth/google/disconnect', { params: { siteId } });
+}
+
+export async function retryGoogleProvisioning(siteId: string): Promise<void> {
+  await api.post('/api/auth/google/retry', null, { params: { siteId } });
+}
+
+// Analytics
+
+export interface AnalyticsOverview {
+  visitsTrend: { date: string; sessions: number }[];
+  totals: {
+    sessions: number;
+    users: number;
+    newUsers: number;
+    avgSessionDurationSeconds: number | null;
+    bounceRate: number | null;
+    totalCtaClicks: number;
+  };
+  topPosts: {
+    postId: string;
+    title: string;
+    slug: string;
+    pageviews: number;
+    ctaClicks: number;
+    conversionRate: number;
+  }[];
+  topPostsByConversion: {
+    postId: string;
+    title: string;
+    slug: string;
+    pageviews: number;
+    ctaClicks: number;
+    conversionRate: number;
+  }[];
+  topCategories: { categoryId: string; name: string; pageviews: number }[];
+  editorialVelocity: number;
+  newVsReturning: { newUsers: number; returningUsers: number };
+  gaConfigured: boolean;
+}
+
+export interface AnalyticsPostRow {
+  postId: string;
+  title: string;
+  slug: string;
+  pageviews: number;
+  sessions: number;
+  avgSessionDurationSeconds: number | null;
+  bounceRate: number | null;
+  ctaClicks: number;
+  conversionRate: number;
+}
+
+export async function getAnalyticsOverview(
+  siteId: string,
+  params?: { startDate?: string; endDate?: string },
+): Promise<AnalyticsOverview> {
+  const response = await api.get(`/api/sites/${siteId}/analytics/overview`, { params });
+  return response.data;
+}
+
+export async function getAnalyticsPosts(
+  siteId: string,
+  params?: { startDate?: string; endDate?: string; limit?: number; page?: number },
+): Promise<{ rows: AnalyticsPostRow[]; page: number; limit: number }> {
+  const response = await api.get(`/api/sites/${siteId}/analytics/posts`, { params });
+  return response.data;
+}
+
+export async function getAnalyticsCategories(
+  siteId: string,
+  params?: { startDate?: string; endDate?: string; limit?: number; page?: number },
+): Promise<{ rows: { categoryId: string; name: string; pageviews: number }[]; page: number; limit: number }> {
+  const response = await api.get(`/api/sites/${siteId}/analytics/categories`, { params });
+  return response.data;
+}

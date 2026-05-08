@@ -1,0 +1,18 @@
+FROM node:20-alpine AS base
+
+RUN apk add --no-cache python3 make g++ libc6-compat
+
+WORKDIR /app
+
+# ── API dependencies ──────────────────────────────────────────────────────────
+COPY apps/api/package*.json ./api/
+RUN cd api && npm ci --omit=dev
+
+COPY apps/api ./api
+
+# ── Worker entrypoint ─────────────────────────────────────────────────────────
+WORKDIR /app/api
+
+ENV NODE_ENV=production
+
+CMD ["node", "src/workers/googleWorker.js"]

@@ -119,7 +119,7 @@ export default function ArticlePage({
             dangerouslySetInnerHTML={{ __html: post.content }}
           />
 
-          <PostCTA />
+          <PostCTA siteId={site.id} postId={post.id} />
 
           <RelatedPosts
             currentPostId={post.id}
