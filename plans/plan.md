@@ -381,7 +381,30 @@ Pipeline GitHub Actions:
 - [ ] Interface no backoffice para selecionar data/hora de publicação (dia da semana, dia do mês e horário)
 - [ ] Listagem de posts agendados com opção de cancelar ou reagendar
 
-### Fase 9 — Deploy e Documentação
+### Fase 9 — Revisão e Continuidade da Grade de Conteúdo
+
+#### Interação com a Grade Antes da Geração de Posts
+
+- [ ] Adicionar campos `status` (`pending_review` | `approved` | `rejected`), `feedback` (text nullable) e `order` (int) na tabela `content_strategy_briefs` (ou criar tabela `roadmap_topics` com os mesmos campos + `brief_id` FK)
+- [ ] Endpoint `GET /api/sites/:siteId/ai/roadmap/topics` — lista todos os tópicos da grade com status e metadados (título, descrição, palavras-chave, categoria sugerida)
+- [ ] Endpoint `PUT /api/sites/:siteId/ai/roadmap/topics/:topicId` — edita título, descrição, palavras-chave ou categoria de um tópico ainda não escrito
+- [ ] Endpoint `DELETE /api/sites/:siteId/ai/roadmap/topics/:topicId` — remove tópico da grade
+- [ ] Endpoint `POST /api/sites/:siteId/ai/roadmap/regenerate` — recebe `{ feedback: string }` e regera a grade inteira incorporando o feedback; preserva tópicos já publicados ou em rascunho
+- [ ] Endpoint `POST /api/sites/:siteId/ai/roadmap/approve` — marca a grade como aprovada e dispara a geração dos primeiros posts (N configurável, padrão 5)
+- [ ] Tela no backoffice de "Revisão da Grade": lista de tópicos em cards editáveis inline (título, descrição, categoria, palavras-chave), com ações de remover e reordenar via drag-and-drop
+- [ ] Campo de feedback em texto livre + botão "Regerar Grade" que exibe preview da nova grade antes de confirmar a substituição
+- [ ] Botão "Aprovar Grade e Gerar Posts" — só habilitado após aprovação; dispara geração dos primeiros rascunhos em background e redireciona para a listagem de posts
+
+#### Expansão Automática da Grade
+
+- [ ] Adicionar campo `auto_expand_threshold` (float, padrão `0.8`) e `last_expanded_at` (timestamptz nullable) na tabela `sites`
+- [ ] Worker periódico (cron via Bull, intervalo configurável, ex: diário) que, para cada site com grade ativa, calcula `ratio = tópicos_publicados / total_tópicos_não_rejeitados`; quando `ratio >= auto_expand_threshold`, enfileira job de expansão
+- [ ] Job de expansão: chama o agente de roadmap passando o contexto da grade existente como referência, solicita N novos tópicos complementares (sem duplicar os já existentes) e os insere com status `pending_review`
+- [ ] Notificação no backoffice (badge ou toast) informando que novos tópicos foram sugeridos e aguardam revisão
+- [ ] Endpoint `GET /api/sites/:siteId/ai/roadmap/expansion-status` — retorna `ratio` atual, limiar configurado e data da última expansão
+- [ ] Configuração no painel do site para ajustar `auto_expand_threshold` e habilitar/desabilitar a expansão automática
+
+### Fase 10 — Deploy e Documentação
 - [ ] Dockerfiles de produção para cada app
 - [ ] Pipeline GitHub Actions (lint, test, build, deploy)
 - [ ] Documentação de onboarding para novos desenvolvedores

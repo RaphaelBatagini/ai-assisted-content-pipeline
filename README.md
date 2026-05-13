@@ -1,537 +1,192 @@
-# Blogs Tool
+# AI-Assisted Content Pipeline
 
-A multi-tenant SaaS platform for creating and managing blogs. Users subscribe via the landing page, pay with a credit card, and manage their sites (posts, categories, settings) in a backoffice dashboard.
-
-## Architecture
-
-```
-Landing Page (port 3002)  →  Backoffice (port 3000)  →  API (port 3001)
-                                                              │
-                                                    ┌─────────┴──────────┐
-                                               PostgreSQL :5432     Redis :6379
-                                                                          │
-                                                                   Build Worker
-                                                                  (Bull consumer)
-                                                                          │
-                                                               site-template build
-                                                               (Next.js export)
-                                                                          │
-                                                               S3 upload + CDN
-                                                               invalidation
-```
-
-| App              | Tech                            | Dev Port |
-|------------------|---------------------------------|----------|
-| `api`            | Node.js 20 + Express 5          | 3001     |
-| `backoffice`     | Next.js 14 (App Router)         | 3000     |
-| `landing`        | Next.js 14 (SSG)                | 3002     |
-| `site-template`  | Next.js 14 (static export)      | —        |
-| `lambda-edge`    | AWS Lambda@Edge (Node.js)       | —        |
-| `build-worker`   | Bull consumer (Node.js process) | —        |
+A multi-tenant blog platform with async static site generation, automated Google Analytics/Tag Manager provisioning, and AI-driven content workflows backed by human review.
 
 ---
 
-## Prerequisites
-
-- [Node.js 20+](https://nodejs.org/)
-- [Docker & Docker Compose](https://docs.docker.com/compose/)
-- [Stripe CLI](https://stripe.com/docs/stripe-cli) *(optional, for webhook testing)*
-
----
-
-## Quick Start
-
-### 1. Start infrastructure (PostgreSQL + Redis)
-
-```bash
-docker compose up -d postgres redis
-```
-
-### 2. Set up environment variables
-
-Copy and edit each app's env file:
-
-```bash
-# API
-cp apps/api/.env.example apps/api/.env
-
-# Backoffice
-cp apps/backoffice/.env.example apps/backoffice/.env.local
-
-# Landing
-cp apps/landing/.env.example apps/landing/.env.local
-```
-
-Edit the files with your own values (see [Environment Variables](#environment-variables) below).
-
-### 3. Install dependencies
-
-```bash
-cd apps/api && npm install
-cd ../backoffice && npm install
-cd ../landing && npm install
-cd ../site-template && npm install
-```
-
-### 4. Run database migrations
-
-```bash
-cd apps/api
-npm run migrate
-```
-
-### 5. Start all apps (separate terminals)
-
-```bash
-# Terminal 1 — API (http://localhost:3001)
-cd apps/api && npm run dev
-
-# Terminal 2 — Backoffice (http://localhost:3000)
-cd apps/backoffice && npm run dev
-
-# Terminal 3 — Landing (http://localhost:3002)
-cd apps/landing && npm run dev
-
-# Terminal 4 — Build Worker (optional, see Static Site Generation section)
-cd apps/api && npm run worker:dev
-```
+![CI](https://img.shields.io/github/actions/workflow/status/your-org/your-repo/ci.yml?label=CI&logo=github)
+![Lint](https://img.shields.io/github/actions/workflow/status/your-org/your-repo/lint.yml?label=Lint&logo=eslint)
+![Tests](https://img.shields.io/github/actions/workflow/status/your-org/your-repo/test.yml?label=Tests&logo=jest)
+![TypeScript](https://img.shields.io/badge/TypeScript-strict-blue?logo=typescript)
 
 ---
 
-## Environment Variables
+## Overview
 
-### `apps/api/.env`
+This platform lets users create and manage independent blog sites through a backoffice dashboard. Each site is served as fully static HTML, built on demand whenever content changes and distributed via CDN — no application server is exposed to end users at request time.
 
-| Variable                    | Description                                     | Default              |
-|-----------------------------|-------------------------------------------------|----------------------|
-| `NODE_ENV`                  | Environment (`development` / `production`)      | `development`        |
-| `PORT`                      | API server port                                 | `3001`               |
-| `DB_HOST`                   | PostgreSQL host                                 | `localhost`          |
-| `DB_PORT`                   | PostgreSQL port                                 | `5432`               |
-| `DB_NAME`                   | Database name                                   | `blogs_tool`         |
-| `DB_USER`                   | Database user                                   | `postgres`           |
-| `DB_PASSWORD`               | Database password                               | `postgres`           |
-| `REDIS_URL`                 | Redis connection URL                            | `redis://localhost:6379` |
-| `JWT_SECRET`                | Secret for access token signing                 | *(required)*         |
-| `JWT_REFRESH_SECRET`        | Secret for refresh token signing                | *(required)*         |
-| `FRONTEND_URL`              | Allowed CORS origin (backoffice URL)            | `http://localhost:3000` |
-| `LANDING_URL`               | Allowed CORS origin (landing page URL)          | `http://localhost:3002` |
-| `STRIPE_SECRET_KEY`         | Stripe secret key (`sk_test_...`)               | *(required)*         |
-| `STRIPE_WEBHOOK_SECRET`     | Stripe webhook signing secret (`whsec_...`)     | *(required)*         |
-| `STRIPE_PRICE_ID`           | Stripe price ID for the subscription plan       | *(required)*         |
-| `AWS_ACCESS_KEY_ID`         | AWS access key (for S3 uploads)                 | *(optional)*         |
-| `AWS_SECRET_ACCESS_KEY`     | AWS secret key                                  | *(optional)*         |
-| `AWS_REGION`                | AWS region                                      | `us-east-1`          |
-| `AWS_S3_BUCKET`             | S3 bucket name for media uploads                | *(optional)*         |
-| `RESEND_API_KEY`            | Resend API key for transactional emails         | *(optional)*         |
-| `STATIC_SITES_BUCKET`       | S3 bucket for hosting generated static sites    | *(required in prod)* |
-| `CF_DISTRIBUTION_ID`        | CloudFront distribution ID for CDN invalidation | *(optional)*         |
-| `SITE_BASE_URL_TEMPLATE`    | URL pattern for tenant sites, e.g. `https://{slug}.example.com` | *(required in prod)* |
-| `SITE_TEMPLATE_DIR`         | Absolute path to the `apps/site-template` directory | auto-detected |
-| `BUILDS_BASE_DIR`           | Temp directory for build artifacts              | `/tmp/builds`        |
-| `BUILD_CONCURRENCY`         | Number of parallel site builds the worker runs  | `1`                  |
-| `ENCRYPTION_KEY`            | 32-byte key as 64 hex chars — encrypts OAuth tokens at rest | *(required)*  |
-| `GOOGLE_CLIENT_ID`          | Google OAuth 2.0 client ID                      | *(required)*         |
-| `GOOGLE_CLIENT_SECRET`      | Google OAuth 2.0 client secret                  | *(required)*         |
-| `GOOGLE_OAUTH_REDIRECT_URI` | OAuth callback URL, e.g. `https://api.example.com/api/auth/google/callback` | *(required)* |
-| `BACKOFFICE_URL`            | Backoffice base URL (used for OAuth redirect after connect) | *(required)* |
-| `SITE_BASE_DOMAIN`          | Root domain of tenant sites, e.g. `example.com` — used for GA4 stream URI | *(required in prod)* |
-| `GOOGLE_PROVISIONING_CONCURRENCY` | Parallel Google provisioning jobs the worker runs | `2`           |
+Core design goals:
 
-### `apps/backoffice/.env.local`
-
-| Variable                          | Description                   | Default                     |
-|-----------------------------------|-------------------------------|-----------------------------|
-| `NEXT_PUBLIC_API_URL`             | API base URL                  | `http://localhost:3001`     |
-| `NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY` | Stripe publishable key     | *(optional)*                |
-
-### `apps/landing/.env.local`
-
-| Variable                    | Description                   | Default                     |
-|-----------------------------|-------------------------------|-----------------------------|
-| `NEXT_PUBLIC_API_URL`       | API base URL                  | `http://localhost:3001`     |
-| `NEXT_PUBLIC_BACKOFFICE_URL`| Backoffice URL                | `http://localhost:3000`     |
+- **Multi-site static generation** — each tenant's site is independently compiled and deployed to S3 + CloudFront, with Lambda@Edge handling subdomain routing across a single distribution
+- **Async processing** — every heavy operation (static builds, AI content generation, analytics sync, Google provisioning) runs in background workers via queues, keeping the API response times flat regardless of downstream load
+- **AI-assisted content workflows** — a two-phase pipeline (research → write) generates draft content using Gemini, gated by human review before any publication
+- **Operational automation** — Google Analytics 4 and Google Tag Manager are provisioned automatically via OAuth after a one-time user authorization; no manual ID entry required
 
 ---
 
-## Google Analytics & Tag Manager Setup
+## Core Architecture
 
-The platform provisions Google Analytics 4 and Google Tag Manager automatically via OAuth — no manual ID entry required.
+The system is organized as a monorepo with four primary applications and a shared infrastructure layer.
 
-### 1. Create a Google Cloud project and OAuth credentials
+| App | Purpose | Tech |
+|---|---|---|
+| `api` | REST API, auth, queue producers, business logic | Node.js 20 + Express 5 |
+| `backoffice` | Authenticated management dashboard | Next.js 14 (App Router) |
+| `site-template` | Per-tenant static site build target | Next.js 14 (static export) |
+| `lambda-edge` | CDN-level subdomain routing | AWS Lambda@Edge |
 
-1. Go to [console.cloud.google.com](https://console.cloud.google.com) and create (or select) a project.
-2. Navigate to **APIs & Services → Library** and enable all three APIs:
-   - **Google Analytics Admin API**
-   - **Google Analytics Data API**
-   - **Tag Manager API**
-3. Go to **APIs & Services → OAuth consent screen**:
-   - Choose **External** user type.
-   - Fill in app name, support email, and developer contact.
-   - Add the following OAuth scopes:
-     - `https://www.googleapis.com/auth/analytics.edit`
-     - `https://www.googleapis.com/auth/analytics.readonly`
-     - `https://www.googleapis.com/auth/tagmanager.edit.containers`
-     - `https://www.googleapis.com/auth/tagmanager.manage.accounts`
-     - `https://www.googleapis.com/auth/tagmanager.readonly`
-     - `openid`, `email`, `profile`
-   - Add your own Google account as a test user while the app is in testing mode.
-4. Go to **APIs & Services → Credentials → Create Credentials → OAuth client ID**:
-   - Application type: **Web application**.
-   - Add your callback URL under **Authorized redirect URIs**:
-     - Development: `http://localhost:3001/api/auth/google/callback`
-     - Production: `https://api.example.com/api/auth/google/callback`
-5. Copy the **Client ID** and **Client Secret** into `GOOGLE_CLIENT_ID` and `GOOGLE_CLIENT_SECRET`.
+Background workers run as separate processes within the API container boundary:
 
-### 2. Generate an encryption key
+| Worker | Responsibility |
+|---|---|
+| `buildWorker` | Static site generation and S3 deployment |
+| `aiWorker` | Content research and draft post generation via Gemini |
+| `googleWorker` | GA4 property and GTM container provisioning |
+| `analyticsWorker` | Custom event persistence and GA4 metrics daily sync |
 
-OAuth tokens are encrypted at rest with AES-256-GCM. Generate a 32-byte key encoded as 64 hex characters:
+```mermaid
+flowchart TD
+    BO[Backoffice\nNext.js 14] -->|REST / JWT| API[API\nExpress 5]
+    API -->|read / write| DB[(PostgreSQL 16)]
+    API -->|enqueue| Q[Redis / Bull Queues]
 
-```bash
-openssl rand -hex 32
+    Q -->|site-builds| BW[Build Worker]
+    Q -->|ai-content| AW[AI Worker]
+    Q -->|google-provisioning| GW[Google Worker]
+    Q -->|analytics| ANW[Analytics Worker]
+
+    BW -->|next build + export| ST[site-template]
+    ST -->|static assets| S3S[S3\nStatic Sites]
+    S3S --> CF[CloudFront\n+ Lambda@Edge]
+    CF -->|Host header routing| Sites[Tenant Sites\n*.example.com]
+
+    AW -->|prompts| GM[Gemini 2.5 Flash]
+    GM -->|draft posts| DB
+
+    GW -->|OAuth 2.0| GAPI[Google APIs\nGA4 + GTM]
+    GAPI -->|IDs stored| DB
+
+    ANW -->|GA4 Data API| GAPI
+    ANW -->|daily upsert| DB
+
+    API -->|signature verified| Stripe
+    API -->|media files| S3M[S3\nMedia Uploads]
 ```
 
-Set the output as `ENCRYPTION_KEY` in your `.env`.
-
-### 3. Configure environment variables
-
-```env
-ENCRYPTION_KEY=<64 hex chars from step 2>
-GOOGLE_CLIENT_ID=<from GCP credentials>
-GOOGLE_CLIENT_SECRET=<from GCP credentials>
-GOOGLE_OAUTH_REDIRECT_URI=https://api.example.com/api/auth/google/callback
-BACKOFFICE_URL=https://backoffice.example.com
-SITE_BASE_DOMAIN=example.com
-GOOGLE_PROVISIONING_CONCURRENCY=2
-```
-
-### 4. Start the Google provisioning worker
-
-The worker processes GA4 + GTM provisioning jobs from the Bull queue asynchronously.
-
-**Development:**
-
-```bash
-cd apps/api && npm run worker:google:dev
-```
-
-**Production (Docker):** the `google-worker` service in `docker-compose.yml` starts automatically with `docker compose up`.
-
-### 5. How it works end-to-end
-
-```
-User clicks "Connect with Google" in Site Settings
-        │
-        ▼
-Backoffice calls GET /api/auth/google/connect?siteId=<id>
-  → API generates a signed state JWT + single-use nonce (Redis, 10 min TTL)
-  → Returns Google OAuth authorization URL
-        │
-        ▼
-User completes Google OAuth consent screen
-        │
-        ▼
-Google redirects to /api/auth/google/callback?code=...&state=...
-  → API verifies state JWT + consumes nonce (CSRF protection)
-  → Exchanges code for access + refresh tokens
-  → Tokens encrypted (AES-256-GCM) and stored in google_oauth_tokens table
-  → Site status set to "pending", provisioning job enqueued
-        │
-        ▼
-google-worker picks up job
-  1. Creates (or reuses) GA4 property matching the site name
-  2. Creates (or reuses) a Web Data Stream for the site domain
-  3. Creates (or reuses) GTM container matching the site name
-  4. Creates an All Pages PAGEVIEW trigger + GA4 Configuration tag inside GTM
-  5. Publishes the GTM workspace
-  6. Saves all IDs to the site record (gaPropertyId, gaTrackingId, gtmContainerId, etc.)
-  7. Triggers a site rebuild so the new GTM snippet is injected into the static site
-        │
-        ▼
-Backoffice polls GET /api/auth/google/status?siteId=<id> every 3 s
-  → Displays real-time provisioning progress
-  → Shows connected email, GA4 property ID, GTM container ID on completion
-```
-
-Provisioning is **idempotent**: re-running it (via the Retry button) will reuse any resources already created in Google instead of creating duplicates. Jobs are retried up to **3 times** with exponential back-off on failure.
+Separation of concerns is enforced at the process boundary: the API never performs blocking work inline. Builds, AI generation, provisioning, and analytics are always delegated to workers, decoupling request latency from downstream execution time.
 
 ---
 
-## Docker (Production)
+## Event-Driven Workflow
 
-To run the full stack with Docker:
+Content changes propagate through the system asynchronously:
 
-```bash
-# Copy and edit root .env with your production values
-cp apps/api/.env.example .env
+1. **Content updated** — author publishes or edits a post in the backoffice
+2. **Build job enqueued** — the API writes a `{ siteId, trigger }` job to the `site-builds` queue and returns immediately
+3. **Worker executes** — the build worker fetches current site data from PostgreSQL, writes JSON snapshots to an isolated temp directory, and runs `next build` against the site-template
+4. **Artifacts uploaded** — static output is synced to S3 under the tenant's slug prefix; existing objects are deleted before upload for a clean deploy
+5. **Cache invalidated** — a CloudFront invalidation request surfaces the new content within seconds
 
-docker compose up --build
-```
+The same queue-first pattern applies to all long-running operations:
 
-Services exposed by Docker Compose:
+- **AI generation** is triggered by submitting a content strategy brief; research and writing phases run entirely in the background across sequential jobs
+- **Google provisioning** runs once after OAuth authorization; the backoffice polls a status endpoint until the worker reports completion
+- **Analytics sync** runs on a daily cron schedule (default: 3 AM UTC), pulling GA4 metrics and upserting post- and site-level performance data
 
-| Service        | Host Port | Description                                      |
-|----------------|-----------|--------------------------------------------------|
-| `landing`      | 3002      | Next.js landing page                             |
-| `postgres`     | 5432      | PostgreSQL database                              |
-| `redis`        | 6379      | Redis (queue broker)                             |
-| `build-worker` | —         | Bull consumer that builds and deploys tenant sites |
-
-> The API and Backoffice are not included in the default Docker Compose file for production; deploy them to your preferred platform (e.g. Railway, Render, Vercel, or a VPS).
+Decoupling these workflows from the request path means failures are isolated, retried with exponential backoff (3 attempts, 5-second initial delay), and do not affect API availability.
 
 ---
 
-## Database Migrations
+## Technical Highlights
 
-```bash
-cd apps/api
+**Queue architecture**
+Bull (Redis-backed) with four named queues and configurable concurrency per worker. Job history is retained for observability without unbounded growth — successful jobs capped at 100, failed jobs at 50.
 
-# Run all pending migrations
-npm run migrate
+**Atomic static deploys**
+Each build runs in an isolated directory (`/tmp/builds/{siteId}/`). S3 upload deletes all existing objects under the tenant prefix before writing new ones, preventing stale file accumulation. CloudFront is invalidated post-upload.
 
-# Roll back all migrations
-npm run migrate:undo
-```
+**Monorepo with independent process boundaries**
+All apps live under `apps/` but run as independent processes or containers. Workers are horizontally scalable: increasing `BUILD_CONCURRENCY` or `AI_JOB_CONCURRENCY` requires no architectural changes.
 
----
+**Two-phase AI content pipeline**
+Gemini 2.5 Flash drives a researcher agent (topic roadmap as structured JSON) followed by a writer agent (full HTML draft per topic). Both phases produce typed outputs validated before persistence. No AI-generated content enters the system with `status: published`.
 
-## Running Tests
+**Automated Google provisioning**
+After a one-time OAuth consent, the platform creates a GA4 property, data stream, and GTM container — publishes the container and stores all generated IDs. OAuth tokens are encrypted at rest (AES-256-GCM) and refreshed proactively 5 minutes before expiry.
 
-```bash
-cd apps/api
-npm test
-```
+**Multi-tenant CDN routing**
+A single CloudFront distribution serves all tenants. Lambda@Edge reads the `Host` header at the viewer-request stage and rewrites the S3 origin path to the correct slug prefix — no per-tenant distribution management required.
 
----
+**Security primitives**
+- JWT access tokens (15-minute TTL) + rotating refresh tokens in `httpOnly` cookies
+- CSRF protection on Google OAuth via Redis-backed single-use nonces inside signed JWT state parameters
+- Stripe webhook signature verification on every inbound event
+- All database queries scoped by `user_id` or validated through the ownership middleware before execution
 
-## Stripe Webhook (local development)
-
-Forward Stripe events to your local API:
-
-```bash
-cd apps/api
-npm run stripe:listen
-```
-
-Trigger test events:
-
-```bash
-npm run stripe:trigger:checkout
-npm run stripe:trigger:subscription:updated
-```
+**Quality gates (CI pipeline)**
+- ESLint validation
+- Jest integration test suite (Supertest against real database)
+- TypeScript type checking (backoffice)
+- Next.js build validation (backoffice + site-template)
+- Pull request checks required before merge to main
 
 ---
 
-## Project Structure
+## Engineering Focus
 
-```
-/
-├── apps/
-│   ├── api/              # Node.js + Express — REST API, auth, payments, uploads
-│   │   └── src/
-│   │       ├── services/
-│   │       │   ├── buildQueue.js      # Bull queue helper (enqueue builds)
-│   │       │   └── s3DeployService.js # S3 upload + CloudFront invalidation
-│   │       └── workers/
-│   │           └── buildWorker.js     # Bull consumer — builds & deploys sites
-│   ├── backoffice/       # Next.js 14 (App Router) — authenticated dashboard
-│   ├── landing/          # Next.js 14 (SSG) — marketing & sign-up page
-│   ├── site-template/    # Next.js 14 (static export) — tenant blog template
-│   │   ├── pages/        # Home, [categorySlug], post/[postSlug], contato
-│   │   ├── components/   # Layout, PostCard, Analytics (GA/GTM/Pixel)
-│   │   ├── lib/          # data.ts, palettes.ts, types.ts
-│   │   └── scripts/      # generate-sitemap.js (runs post-build)
-│   └── lambda-edge/      # AWS Lambda@Edge — wildcard subdomain routing
-│       └── viewer-request.js
-├── plans/                # Project planning documents
-└── docker-compose.yml
-```
+This repository is a platform engineering project designed around maintainability, operational simplicity, and async-first architecture — not as a minimal proof of concept.
+
+Key design principles:
+
+- **Async by default** — no synchronous side effects in the request path; all external operations are enqueued and return immediately to the caller
+- **Operational simplicity** — Docker Compose covers the full local stack; production adds S3 and CloudFront but introduces no new architectural primitives
+- **Predictable failure modes** — queue retries with backoff, isolated build directories, and atomic S3 deploys prevent partial or corrupt state
+- **Maintainability** — database schema is managed through sequential migration files; no ORM magic for schema changes
+- **Developer experience** — a single `docker compose up` gets PostgreSQL and Redis running; each app starts independently with `npm run dev`
 
 ---
 
-## Static Site Generation
+## AI-Assisted Engineering
 
-Each tenant's blog is compiled to plain HTML/CSS/JS and served from a CDN — no Node.js server is exposed to blog visitors.
+AI is used in two distinct ways: as a content generation engine for platform users, and as a productivity tool during development.
 
-### How a build is triggered
+See [AI-PHILOSOPHY.md](AI-PHILOSOPHY.md) for a full breakdown of the prompt design, validation strategy, and human-in-the-loop safeguards.
 
-| Action in backoffice              | API route                               | Build enqueued? |
-|-----------------------------------|-----------------------------------------|-----------------|
-| Publish a post                    | `PUT /api/sites/:id/posts/:id/publish`  | Yes             |
-| Update site settings              | `PUT /api/sites/:id`                    | Yes             |
+**Content generation summary**
 
-When a build is enqueued, the worker (`apps/api/src/workers/buildWorker.js`) picks it up from the Bull (Redis) queue and runs the following steps:
+The AI pipeline accepts a content strategy brief — company context, target audience, pain points, differentiators — and runs it through two sequential prompt stages:
 
-1. **Fetch data** — queries the database and writes JSON files into `/tmp/builds/<siteId>/data/`:
-   - `site.json` — site metadata, palette, analytics IDs
-   - `posts.json` — all published posts with their categories
-   - `categories.json` — all categories
-   - `social-links.json` — social network links
-2. **Build** — runs `npm run build` inside `apps/site-template` with `SITE_DATA_PATH` pointing to the data directory.
-   The template reads the JSON files at build time (no runtime DB access).
-   A `postbuild` script generates `sitemap.xml` and updates `robots.txt` in the `out/` folder.
-3. **Deploy** — copies the `out/` folder to a tenant-specific temp directory, uploads it to the S3 bucket under the prefix `<siteSlug>/`, and creates a CloudFront cache invalidation for `/<siteSlug>/*`.
+1. **Research phase** — produces a JSON roadmap of 15 prioritized topics with editorial angles, target keywords, content formats, and outline headings
+2. **Writing phase** — generates a full HTML draft per topic, including title, slug, excerpt, SEO metadata, and reading time
 
-### Local testing
-
-> You can build and preview any tenant's site **without AWS credentials** by running the template directly.
-
-**Step 1 — Create the data directory with sample JSON files:**
-
-```bash
-mkdir -p /tmp/builds/test-site/data
-```
-
-Create `/tmp/builds/test-site/data/site.json`:
-
-```json
-{
-  "id": "00000000-0000-0000-0000-000000000001",
-  "name": "Meu Blog Local",
-  "slug": "meu-blog",
-  "colorPalette": "ocean_breeze",
-  "logoUrl": null,
-  "faviconUrl": null,
-  "contactEmail": "contato@meublog.com",
-  "whatsapp": null,
-  "address": null,
-  "gaTrackingId": null,
-  "gtmContainerId": null,
-  "fbPixelId": null,
-  "customHeadScripts": null
-}
-```
-
-Create `/tmp/builds/test-site/data/posts.json`, `categories.json`, and `social-links.json` with `[]` (empty arrays) or sample data following the same shape as the Sequelize models.
-
-**Step 2 — Build the site:**
-
-```bash
-cd apps/site-template
-
-SITE_DATA_PATH=/tmp/builds/test-site/data \
-SITE_BASE_URL=http://localhost:3003 \
-npm run build
-```
-
-The static files are generated in `apps/site-template/out/`.
-
-**Step 3 — Serve and preview:**
-
-```bash
-# Using npx serve (install once: npm i -g serve)
-serve apps/site-template/out -p 3003
-
-# Or with Python
-python3 -m http.server 3003 --directory apps/site-template/out
-```
-
-Open [http://localhost:3003](http://localhost:3003) in your browser.
-
-**Step 4 — Test the full queue flow locally (with Redis running):**
-
-```bash
-# Ensure PostgreSQL and Redis are running
-docker compose up -d postgres redis
-
-# Start the build worker (separate terminal)
-cd apps/api && npm run worker:dev
-```
-
-Publish any post via the Backoffice or call the API directly:
-
-```bash
-curl -X PUT http://localhost:3001/api/sites/<siteId>/posts/<postId>/publish \
-  -H "Authorization: Bearer <token>"
-```
-
-The worker will log its progress and write the built files to `/tmp/builds/<siteId>/out/`.
-Because `STATIC_SITES_BUCKET` is not set, the S3 upload step is skipped automatically.
+Outputs are saved as `draft` posts and surfaced in the backoffice for review. No AI-generated content is published without explicit human action — the publish step is always a deliberate, manual operation.
 
 ---
 
-### Production deployment
+## Testing Strategy
 
-**Infrastructure required:**
+See [TESTING-PHILOSOPHY.md](TESTING-PHILOSOPHY.md) for a full description.
 
-| Resource                   | Purpose                                                         |
-|----------------------------|-----------------------------------------------------------------|
-| S3 bucket                  | Hosts the generated static files, one prefix per tenant slug    |
-| CloudFront distribution    | CDN in front of the S3 bucket; wildcard CNAME `*.example.com`  |
-| Lambda@Edge (us-east-1)    | Viewer Request handler that rewrites URIs to the correct prefix |
-| Redis (ElastiCache or SaaS)| Bull queue broker                                               |
+The test suite is integration-focused: tests run against a real in-memory database with Supertest exercising the full request/response cycle. External dependencies (Stripe, queues) are mocked at the module boundary.
 
-**Lambda@Edge setup (`apps/lambda-edge/viewer-request.js`):**
+Coverage goals are secondary to workflow reliability. Priority areas:
 
-1. Set the `BASE_DOMAIN` constant (or environment variable) to your root domain (e.g. `example.com`).
-2. Deploy to Lambda in **us-east-1** and associate it with the CloudFront distribution's **Viewer Request** event.
-3. The function reads the `Host` header (e.g. `my-blog.example.com`), extracts the slug, and rewrites the URI from `/path` to `/my-blog/path` so CloudFront reads from the correct S3 prefix.
-
-```bash
-# Package and deploy (requires AWS CLI)
-cd apps/lambda-edge
-npm run package   # creates lambda-edge.zip
-npm run deploy    # calls aws lambda update-function-code
-```
-
-**Environment variables for the build worker in production** (set in Docker Compose, ECS task definition, or equivalent):
-
-```env
-REDIS_URL=redis://<host>:6379
-DB_HOST=<rds-endpoint>
-DB_NAME=blogs_tool
-DB_USER=<user>
-DB_PASSWORD=<password>
-AWS_REGION=us-east-1
-AWS_ACCESS_KEY_ID=<key>
-AWS_SECRET_ACCESS_KEY=<secret>
-STATIC_SITES_BUCKET=my-static-sites-bucket
-CF_DISTRIBUTION_ID=EXXXXXXXXX
-SITE_BASE_URL_TEMPLATE=https://{slug}.example.com
-NEXT_PUBLIC_API_URL=https://api.example.com
-BUILD_CONCURRENCY=2
-```
-
-**Build flow end-to-end (production):**
-
-```
-User publishes post in Backoffice
-        │
-        ▼
-API enqueues job { siteId, trigger } → Redis (Bull)
-        │
-        ▼
-build-worker picks up job
-  1. Queries PostgreSQL → writes JSON files to /tmp/builds/<siteId>/data/
-  2. Runs `npm run build` in apps/site-template (using SITE_DATA_PATH)
-  3. Copies out/ to /tmp/builds/<siteId>/out/
-  4. Uploads all files to s3://STATIC_SITES_BUCKET/<slug>/
-  5. Creates CloudFront invalidation for /<slug>/*
-        │
-        ▼
-Visitor requests https://<slug>.example.com/some-post/
-  → Lambda@Edge rewrites URI to /<slug>/some-post/index.html
-  → CloudFront serves from S3
-  → Static HTML delivered in ~50–100 ms
-```
-
-Jobs are retried up to **3 times** with exponential back-off (5 s base delay) on failure.
+- Authentication and token lifecycle
+- Payment and subscription activation via Stripe webhooks
+- Ownership enforcement across all resource operations
+- Post publication and build queue enqueue behavior
 
 ---
 
-## Tech Stack
+## Setup
 
-| Layer             | Technology                                        |
-|-------------------|---------------------------------------------------|
-| Backend API       | Node.js 20 + Express 5                            |
-| Database          | PostgreSQL 16 + Sequelize ORM                     |
-| Auth              | JWT (access + refresh tokens, httpOnly cookies)   |
-| Cache / Queues    | Redis + Bull                                      |
-| Backoffice        | Next.js 14 + Tailwind CSS + shadcn/ui             |
-| Landing           | Next.js 14 (static export)                        |
-| Site Generator    | Next.js 14 (static export, per-tenant build)      |
-| CDN routing       | AWS Lambda@Edge (wildcard subdomain → S3 prefix)  |
-| Payments          | Stripe (Checkout + Webhooks)                      |
-| File Storage      | AWS S3                                            |
-| Email             | Resend                                            |
-| Containerization  | Docker + Docker Compose                           |
+See [SETUP.md](SETUP.md) for prerequisites, environment variables, database setup, and service integrations.
+
+---
+
+## Future Improvements
+
+See [TODO.md](TODO.md) for the current roadmap, grouped by initiative.
+
+---
+
