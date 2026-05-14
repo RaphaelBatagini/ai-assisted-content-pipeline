@@ -1,13 +1,14 @@
 const router = require('express').Router();
 const { Site } = require('../models');
 const auth = require('../middlewares/auth');
+const subscription = require('../middlewares/subscription');
 const ownership = require('../middlewares/ownership');
 const validate = require('../middlewares/validate');
 const { create: createSchema, update: updateSchema } = require('../validators/sites');
 const { enqueueBuild } = require('../services/buildQueue');
 
-// All routes require auth
-router.use(auth);
+// All routes require auth and an active subscription
+router.use(auth, subscription);
 
 // GET /api/sites
 router.get('/', async (req, res, next) => {
