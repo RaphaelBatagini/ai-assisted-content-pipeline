@@ -1,0 +1,24 @@
+name: CI – Lambda@Edge
+
+on:
+  push:
+    paths:
+      - 'apps/lambda-edge/**'
+  pull_request:
+    paths:
+      - 'apps/lambda-edge/**'
+
+jobs:
+  package:
+    name: Package
+    runs-on: ubuntu-latest
+
+    defaults:
+      run:
+        working-directory: apps/lambda-edge
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Package function
+        run: npm run package
