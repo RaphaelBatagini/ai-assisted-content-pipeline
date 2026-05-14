@@ -235,7 +235,7 @@ export default function AnalyticsDashboardPage() {
                     <YAxis tick={{ fontSize: 11 }} allowDecimals={false} />
                     <Tooltip
                       labelFormatter={(v) => format(new Date(v), "MMMM d, yyyy")}
-                      formatter={(v: number) => [v.toLocaleString(), "Sessions"]}
+                      formatter={(v) => [(v as number | undefined)?.toLocaleString() ?? "0", "Sessions"]}
                     />
                     <Line
                       type="monotone"
@@ -273,14 +273,14 @@ export default function AnalyticsDashboardPage() {
                         innerRadius={55}
                         outerRadius={80}
                         dataKey="value"
-                        label={({ name, percent }) => `${name} ${(percent * 100).toFixed(0)}%`}
+                        label={({ name, percent }) => `${name} ${((percent ?? 0) * 100).toFixed(0)}%`}
                         labelLine={false}
                       >
                         <Cell fill="#6366f1" />
                         <Cell fill="#e2e8f0" />
                       </Pie>
                       <Legend />
-                      <Tooltip formatter={(v: number) => v.toLocaleString()} />
+                      <Tooltip formatter={(v) => (v as number | undefined)?.toLocaleString() ?? "0"} />
                     </PieChart>
                   </ResponsiveContainer>
                 )}
@@ -305,7 +305,7 @@ export default function AnalyticsDashboardPage() {
                       <CartesianGrid strokeDasharray="3 3" className="stroke-muted" />
                       <XAxis type="number" tick={{ fontSize: 11 }} allowDecimals={false} />
                       <YAxis type="category" dataKey="name" tick={{ fontSize: 11 }} width={90} />
-                      <Tooltip formatter={(v: number) => [v.toLocaleString(), "Pageviews"]} />
+                      <Tooltip formatter={(v) => [(v as number | undefined)?.toLocaleString() ?? "0", "Pageviews"]} />
                       <Bar dataKey="pageviews" radius={[0, 4, 4, 0]}>
                         {data.topCategories.map((_, i) => (
                           <Cell key={i} fill={CHART_COLORS[i % CHART_COLORS.length]} />

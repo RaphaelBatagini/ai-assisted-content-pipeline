@@ -34,7 +34,7 @@ const schema = z.object({
   content_goals: z.array(z.string()).optional(),
   // Step 4
   content_formats: z.array(z.string()).optional(),
-  tone_of_voice: z.enum(["professional", "casual", "technical", "conversational"]).default("professional"),
+  tone_of_voice: z.enum(["professional", "casual", "technical", "conversational"]),
 });
 
 type FormValues = z.infer<typeof schema>;
