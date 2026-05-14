@@ -1,6 +1,9 @@
 # AI-Assisted Content Pipeline
 
-A multi-tenant blog platform with async static site generation, automated Google Analytics/Tag Manager provisioning, and AI-driven content workflows backed by human review.
+Event-driven multi-site publishing platform with async processing, AI-assisted content workflows, and operational automation.
+
+Built with:
+Node.js • BullMQ • AWS Lambda@Edge • CloudFront • Gemini • CI/CD workflows
 
 ---
 
