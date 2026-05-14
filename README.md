@@ -22,6 +22,10 @@ Core design goals:
 - **AI-assisted content workflows** — a two-phase pipeline (research → write) generates draft content using Gemini, gated by human review before any publication
 - **Operational automation** — Google Analytics 4 and Google Tag Manager are provisioned automatically via OAuth after a one-time user authorization; no manual ID entry required
 
+## Why This Exists
+
+This project was created as an engineering-focused platform experiment exploring event-driven content operations, AI-assisted workflows, and operational automation for multi-site publishing systems.
+
 ---
 
 ## Core Architecture
