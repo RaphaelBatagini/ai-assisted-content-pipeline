@@ -6,6 +6,15 @@ process.env.STRIPE_WEBHOOK_SECRET = 'whsec_fake';
 process.env.STRIPE_PRICE_ID = 'price_fake';
 process.env.FRONTEND_URL = 'http://localhost:3001';
 
+// Mock Resend before requiring app
+jest.mock('resend', () => {
+  return {
+    Resend: jest.fn().mockImplementation(() => ({
+      emails: { send: jest.fn().mockResolvedValue({ id: 'email_fake' }) },
+    })),
+  };
+});
+
 // Mock Stripe before requiring app
 jest.mock('stripe', () => {
   const constructEvent = jest.fn();
