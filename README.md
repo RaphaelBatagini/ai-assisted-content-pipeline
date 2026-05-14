@@ -4,10 +4,10 @@ A multi-tenant blog platform with async static site generation, automated Google
 
 ---
 
-![CI](https://img.shields.io/github/actions/workflow/status/your-org/your-repo/ci.yml?label=CI&logo=github)
-![Lint](https://img.shields.io/github/actions/workflow/status/your-org/your-repo/lint.yml?label=Lint&logo=eslint)
-![Tests](https://img.shields.io/github/actions/workflow/status/your-org/your-repo/test.yml?label=Tests&logo=jest)
-![TypeScript](https://img.shields.io/badge/TypeScript-strict-blue?logo=typescript)
+[![CI – API](https://github.com/RaphaelBatagini/ai-assisted-content-pipeline/actions/workflows/ci-api.yml/badge.svg)](https://github.com/RaphaelBatagini/ai-assisted-content-pipeline/actions/workflows/ci-api.yml)
+[![CI – Backoffice](https://github.com/RaphaelBatagini/ai-assisted-content-pipeline/actions/workflows/ci-backoffice.yml/badge.svg)](https://github.com/RaphaelBatagini/ai-assisted-content-pipeline/actions/workflows/ci-backoffice.yml)
+[![CI – Lambda@Edge](https://github.com/RaphaelBatagini/ai-assisted-content-pipeline/actions/workflows/ci-lambda-edge.yml/badge.svg)](https://github.com/RaphaelBatagini/ai-assisted-content-pipeline/actions/workflows/ci-lambda-edge.yml)
+[![CI – Site Template](https://github.com/RaphaelBatagini/ai-assisted-content-pipeline/actions/workflows/ci-site-template.yml/badge.svg)](https://github.com/RaphaelBatagini/ai-assisted-content-pipeline/actions/workflows/ci-site-template.yml)
 
 ---
 
